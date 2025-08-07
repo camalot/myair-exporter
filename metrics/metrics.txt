@@ -1,0 +1,21 @@
+
+
+myair_score{user="",device=""} 89
+
+myair_usage_seconds{user="",device=""} 5000
+
+myair_usage_score{user="",device=""} 70
+
+myair_mask_seal{user="",device=""} 36
+
+myair_mask_seal_score{user="",device=""} 10
+
+myair_mask_onoff{user="",device=""} 2
+
+myair_mask_onoff_score{user="",device=""} 5
+
+myair_events{user="",device=""} 8.6
+
+myair_events_score{user="",device=""} 4
+
+myair_exporter_errors{} 0
