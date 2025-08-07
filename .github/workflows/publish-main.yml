@@ -38,6 +38,9 @@ jobs:
           version: ${{ steps.previoustag.outputs.tag }}
       - run: echo "app_version ${{ steps.semvers.outputs.patch }}"
   docker:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     needs: version
     steps:
