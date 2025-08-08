@@ -271,7 +271,7 @@ class MyAirMetrics:
                     device=user_device_data.serialNumber,
                     date=record.startDate,
                     mask=record.maskCode,
-                ).set(record.maskScore)
+                ).set(record.leakScore)
 
                 self.mask_onoff_count.labels(
                     patient=record.sleepRecordPatientId,
