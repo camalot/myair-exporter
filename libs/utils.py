@@ -93,7 +93,7 @@ def get_timestamp() -> float:
 
 
 def load_from_gist(type, count) -> typing.List[str]:
-    types = [ "adjectives", "nouns", "verbs" ]
+    types = ["adjectives", "nouns", "verbs"]
     if type not in types:
         type = "nouns"
     if count <= 0:

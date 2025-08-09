@@ -19,7 +19,11 @@ from multidict import CIMultiDict
 from .const import AUTH_NEEDS_MFA, AUTHN_SUCCESS, REGION_NA
 from .helpers import redact_dict
 from libs.resmed.client.myair_client import (
-  AuthenticationError, IncompleteAccountError, MyAirClient, MyAirConfig, ParsingError
+  AuthenticationError,
+  IncompleteAccountError,
+  MyAirClient,
+  MyAirConfig,
+  ParsingError,
 )
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
@@ -103,7 +107,7 @@ class RESTClient(MyAirClient):
             self._region_config = EU_CONFIG
         self._email_factor_id: str = self._region_config["email_factor_id"]
         self._mfa_url: str = OAUTH_URLS["mfa_url"].format(
-            okta_url=self._region_config["okta_url"], email_factor_id=self._email_factor_id,
+            okta_url=self._region_config["okta_url"], email_factor_id=self._email_factor_id
         )
 
     @property
@@ -173,9 +177,7 @@ class RESTClient(MyAirClient):
         _LOGGER.debug("[is_email_verified] authorize_url: %s", userinfo_url)
         _LOGGER.debug("[is_email_verified] headers: %s", redact_dict(headers))
 
-        async with self._session.get(
-            userinfo_url, headers=headers, allow_redirects=False
-        ) as userinfo_res:
+        async with self._session.get(userinfo_url, headers=headers, allow_redirects=False) as userinfo_res:
             _LOGGER.debug("[is_email_verified] userinfo_res: %s", userinfo_res)
             userinfo_dict: MutableMapping[str, Any] = await userinfo_res.json()
             _LOGGER.debug("[is_email_verified] introspect_dict: %s", redact_dict(userinfo_dict))
@@ -264,7 +266,7 @@ class RESTClient(MyAirClient):
                     raise AuthenticationError(f"Getting unauthorized error on {step} step. {error_message}")
                 if resp_dict["errors"][0]["errorInfo"]["errorType"] == "badRequest" and resp_dict["errors"][0][
                     "errorInfo"
-                ]["errorCode"] in {"onboardingFlowInProgress","equipmentNotAssigned"}:
+                ]["errorCode"] in {"onboardingFlowInProgress", "equipmentNotAssigned"}:
                     raise IncompleteAccountError(f"{error_message}")
             except TypeError:
                 error_message = "Error"
@@ -395,11 +397,7 @@ class RESTClient(MyAirClient):
         _LOGGER.debug("[get_access_token code] params_query: %s", redact_dict(params_query))
 
         async with self._session.get(
-            authorize_url,
-            headers=self._json_headers,
-            allow_redirects=False,
-            params=params_query,
-            cookies=self._cookies,
+            authorize_url, headers=self._json_headers, allow_redirects=False, params=params_query, cookies=self._cookies
         ) as code_res:
             _LOGGER.debug("[get_access_token] code_res: %s", code_res)
             if "location" not in code_res.headers:
@@ -499,9 +497,7 @@ class RESTClient(MyAirClient):
         _LOGGER.debug("[gql_query] headers: %s", redact_dict(headers))
         _LOGGER.debug("[gql_query] json_query: %s", redact_dict(json_query))
 
-        async with self._session.post(
-            graphql_url, headers=headers, json=json_query
-        ) as records_res:
+        async with self._session.post(graphql_url, headers=headers, json=json_query) as records_res:
             _LOGGER.debug("[gql_query] records_res: %s", records_res)
             records_dict: MutableMapping[str, Any] = await records_res.json()
             _LOGGER.debug("[gql_query] records_dict: %s", redact_dict(records_dict))
@@ -629,7 +625,6 @@ class RESTClient(MyAirClient):
             raise ParsingError("Error getting User Info. Returned data is not a dict")
         _LOGGER.debug("[get_user_info] user_info: %s", redact_dict(user_info))
         return user_info
-
 
     async def get_user_device_data(self, initial: bool | None = False) -> Mapping[str, Any]:
         """Get user device data from ResMed servers."""

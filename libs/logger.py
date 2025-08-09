@@ -46,4 +46,3 @@ class Log:
 
     def fatal(self, method: str, message: str, stackTrace: typing.Optional[str] = None):
         self.__write(level=LogLevel.FATAL, method=method, message=message, stackTrace=stackTrace, file=sys.stderr)
-

@@ -169,9 +169,7 @@ class MyAirMetrics:
         user_device_data = SleepDevice.from_map(await client.get_user_device_data())
         record_days = self.config.settings.myair["records_days"] or 90
         months: int = math.ceil(record_days / 30)
-        sleep_records = [
-            SleepRecord.from_map(record) for record in await client.get_sleep_records(months=months)
-        ]
+        sleep_records = [SleepRecord.from_map(record) for record in await client.get_sleep_records(months=months)]
         user_info = Patient.from_map(await client.get_user_info())
         mask_info = Mask.from_map(await client.get_mask_info())
 
@@ -241,7 +239,7 @@ class MyAirMetrics:
                     mask=record.maskCode,
                 ).set(
                     record.totalUsage * 60
-                ) # totalUsage is in minutes, convert to seconds
+                )  # totalUsage is in minutes, convert to seconds
 
                 self.usage_score.labels(
                     patient=record.sleepRecordPatientId,

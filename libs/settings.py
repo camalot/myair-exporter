@@ -50,7 +50,9 @@ class Settings:
             "device_token": utils.dict_get(os.environ, "MAE_MYAIR_DEVICE_TOKEN", default_value=None),
             "region": utils.dict_get(os.environ, "MAE_MYAIR_REGION", default_value="NA", required=True),
             # parse MAE_MYAIR_RECORDS_DAYS as an integer, default to 90 days
-            "records_days": int(utils.dict_get(os.environ, "MAE_MYAIR_RECORDS_DAYS", default_value='90', required=True) or 90),
+            "records_days": int(
+                utils.dict_get(os.environ, "MAE_MYAIR_RECORDS_DAYS", default_value='90', required=True) or 90
+            ),
         }
 
         # print(json.dumps(self.to_dict(), indent=2))

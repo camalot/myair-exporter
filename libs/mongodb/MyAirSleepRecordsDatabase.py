@@ -102,7 +102,7 @@ class MyAirSleepRecordsDatabase(Database):
                     record.maskCode = existing_record["maskCode"]
 
             self.connection[self.collection_name].update_one(
-                {"startDate": record.startDate, "sleepRecordPatientId": record.sleepRecordPatientId },
+                {"startDate": record.startDate, "sleepRecordPatientId": record.sleepRecordPatientId},
                 {"$set": record.to_dict()},
                 upsert=True,
             )
