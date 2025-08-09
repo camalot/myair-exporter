@@ -32,8 +32,10 @@ async def exporter():
         print(Colors.colorize(Colors.FGYELLOW, "<KeyboardInterrupt received>"))
         exit(0)
 
+
 def run_exporter_sync():
     asyncio.run(exporter())
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()

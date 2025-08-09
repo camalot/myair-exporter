@@ -15,6 +15,7 @@ import typing
 
 from libs import utils
 
+
 @dataclass
 class Mask:
     maskManufacturerName: str

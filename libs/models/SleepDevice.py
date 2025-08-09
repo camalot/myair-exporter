@@ -13,6 +13,7 @@ from typing import Optional
 import libs.utils as utils
 import typing
 
+
 @dataclass
 class SleepDevice:
     serialNumber: str
@@ -47,5 +48,5 @@ class SleepDevice:
             localizedName=data.get("localizedName", ""),
             imagePath=data.get("imagePath", ""),
             fgDeviceManufacturerName=data.get("fgDeviceManufacturerName", ""),
-            fgDevicePatientId=data.get("fgDevicePatientId", "")
+            fgDevicePatientId=data.get("fgDevicePatientId", ""),
         )

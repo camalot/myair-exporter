@@ -1,11 +1,20 @@
 {
   "cSpell.words": [
+    "clientsession",
+    "CPAP",
     "dotenv",
     "FGYELLOW",
+    "hypopnea",
+    "jdata",
+    "labelnames",
     "myair",
     "OKGREEN",
+    "onoff",
+    "regionalized",
     "sighandler",
     "signum",
-    "stdoe"
+    "stdoe",
+    "userinfo",
+    "varnames"
   ]
 }

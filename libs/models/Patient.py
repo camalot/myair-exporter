@@ -16,6 +16,7 @@ import typing
 
 from libs import utils
 
+
 @dataclass
 class Patient:
     id: str

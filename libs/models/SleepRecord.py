@@ -1,5 +1,3 @@
-
-
 # {
 #     "startDate": "2025-08-01",
 #     "totalUsage": 0,
@@ -20,6 +18,7 @@ from typing import Optional
 import typing
 
 from libs import utils
+
 
 @dataclass
 class SleepRecord:

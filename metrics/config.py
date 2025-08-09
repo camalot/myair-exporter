@@ -9,6 +9,7 @@ from libs.logger import Log
 from libs.enums.loglevel import LogLevel
 from libs.settings import Settings
 
+
 class MyAirMetricsConfig:
     def __init__(self, file: str):
         _method = inspect.stack()[0][3]

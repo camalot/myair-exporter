@@ -9,7 +9,7 @@ from metrics.config import MyAirMetricsConfig
 from metrics.myair import MyAirMetrics
 
 
-class MetricsExporter():
+class MetricsExporter:
     def __init__(self):
         _method = inspect.stack()[0][3]
         self._class = self.__class__.__name__
@@ -21,6 +21,7 @@ class MetricsExporter():
         self.log = Log(log_level)
 
         self.log.debug(f"{self._module}.{self._class}.{_method}", f"Exporter initialized")
+
     async def run(self):
         _method = inspect.stack()[1][3]
         try:

@@ -21,8 +21,7 @@ class Settings:
 
         self.name = None
         self.version = None
-
-        self.log_level = utils.dict_get(os.environ, 'MAE_LOG_LEVEL', default_value = 'DEBUG')
+        self.log_level = utils.dict_get(os.environ, 'MAE_LOG_LEVEL', default_value='DEBUG')
 
         # build db_url from environment variables:
         # MAE_MONGODB_USERNAME
@@ -55,7 +54,6 @@ class Settings:
         }
 
         # print(json.dumps(self.to_dict(), indent=2))
-
 
     def to_dict(self):
         return self.__dict__

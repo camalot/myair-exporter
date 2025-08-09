@@ -54,21 +54,21 @@ class MyAirMetrics:
             namespace=self.namespace,
             name=f"patient",
             documentation="A reference metric for the patient to be used in other metrics",
-            labelnames=["id", "name", "ahi"]
+            labelnames=["id", "name", "ahi"],
         )
 
         self.device = Gauge(
             namespace=self.namespace,
             name=f"device",
             documentation="A reference metric for the device to be used in other metrics",
-            labelnames=["serialNumber", "manufacturer", "type", "name", "image"]
+            labelnames=["serialNumber", "manufacturer", "type", "name", "image"],
         )
 
         self.mask = Gauge(
             namespace=self.namespace,
             name=f"mask",
             documentation="A reference metric for the mask to be used in other metrics",
-            labelnames=["patient", "code", "name", "type", "image"]
+            labelnames=["patient", "code", "name", "type", "image"],
         )
 
         self.score = Gauge(
@@ -136,7 +136,6 @@ class MyAirMetrics:
 
         self.log.debug(f"{self._module}.{self._class}.{_method}", f"Metrics initialized")
 
-
     async def run_metrics_loop(self):
         """Metrics fetching loop"""
         _method = inspect.stack()[0][3]
@@ -146,8 +145,7 @@ class MyAirMetrics:
                 await self.fetch()
                 self.log.debug(f"{self._module}.{self._class}.{_method}", f"End metrics fetch")
                 self.log.debug(
-                    f"{self._module}.{self._class}.{_method}",
-                    f"Sleeping for {self.polling_interval_seconds} seconds",
+                    f"{self._module}.{self._class}.{_method}", f"Sleeping for {self.polling_interval_seconds} seconds"
                 )
                 await asyncio.sleep(self.polling_interval_seconds)
             except Exception as ex:
@@ -156,21 +154,15 @@ class MyAirMetrics:
     def _create_clientsession(self, **kwargs):
         return aiohttp.ClientSession(**kwargs)
 
-
-
     async def fetch(self):
-        _method = inspect.stack()[0][3]
-
+        # _method = inspect.stack()[0][3]
         client_config: MyAirConfig = MyAirConfig(
             username=self.config.settings.myair["username"],
             password=self.config.settings.myair["password"],
             region=self.config.settings.myair["region"],
             device_token=self.config.settings.myair["device_token"],
         )
-        client: RESTClient = RESTClient(
-            config=client_config,
-            session=self._create_clientsession()
-        )
+        client: RESTClient = RESTClient(config=client_config, session=self._create_clientsession())
 
         await client.connect()
 
@@ -194,9 +186,7 @@ class MyAirMetrics:
         self.device_db.insert(user_device_data)
 
         self.patient.labels(
-            id=user_info.id,
-            name=f"{user_info.firstName} {user_info.lastName[:1]}",
-            ahi=user_info.userEnteredAhi or 0,
+            id=user_info.id, name=f"{user_info.firstName} {user_info.lastName[:1]}", ahi=user_info.userEnteredAhi or 0
         ).set(1)
 
         devices = self.device_db.list() or []
@@ -222,7 +212,6 @@ class MyAirMetrics:
                 type=mask.maskType,
                 image=mask.imagePath,
             ).set(1 if active else 0)
-
 
         if sleep_records is not None and len(sleep_records) > 0:
             for record in sleep_records:
@@ -250,7 +239,9 @@ class MyAirMetrics:
                     device=user_device_data.serialNumber,
                     date=record.startDate,
                     mask=record.maskCode,
-                ).set(record.totalUsage * 60) # totalUsage is in minutes, convert to seconds
+                ).set(
+                    record.totalUsage * 60
+                ) # totalUsage is in minutes, convert to seconds
 
                 self.usage_score.labels(
                     patient=record.sleepRecordPatientId,

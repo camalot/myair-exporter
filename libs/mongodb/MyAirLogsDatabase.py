@@ -21,7 +21,7 @@ class MyAirLogsDatabase(Database):
         try:
             if self.connection is None or self.client is None:
                 self.open()
-            return list(self.connection.logs.find({})) # type: ignore
+            return list(self.connection.logs.find({}))  # type: ignore
         except Exception as ex:
             self.log(
                 level=loglevel.LogLevel.ERROR,
