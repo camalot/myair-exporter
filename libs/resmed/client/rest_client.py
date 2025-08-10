@@ -1,30 +1,29 @@
 """REST Client for ResMed myAir Client."""
 
 import base64
-from collections.abc import Mapping, MutableMapping
 import datetime
 import hashlib
-from http.cookies import SimpleCookie
 import logging
 import os
 import re
+from collections.abc import Mapping, MutableMapping
+from http.cookies import SimpleCookie
 from typing import Any
 from urllib.parse import DefragResult, parse_qs, urldefrag
 
+import jwt
 from aiohttp import ClientResponse, ClientSession
 from aiohttp.http_exceptions import HttpProcessingError
-import jwt
-from multidict import CIMultiDict
-
-from .const import AUTH_NEEDS_MFA, AUTHN_SUCCESS, REGION_NA
-from .helpers import redact_dict
+from libs.resmed.client.const import AUTH_NEEDS_MFA, AUTHN_SUCCESS, REGION_NA
+from libs.resmed.client.helpers import redact_dict
 from libs.resmed.client.myair_client import (
-  AuthenticationError,
-  IncompleteAccountError,
-  MyAirClient,
-  MyAirConfig,
-  ParsingError,
+    AuthenticationError,
+    IncompleteAccountError,
+    MyAirClient,
+    MyAirConfig,
+    ParsingError,
 )
+from multidict import CIMultiDict
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
@@ -36,11 +35,11 @@ EU_CONFIG: Mapping[str, Any] = {
     # This is the ID that refers to the Email MFA Factor
     "email_factor_id": "emfg9cmjqxEPr52cT417",
     # This is the server ID that is designated by Okta for myAir used in authentication urls
-    "auth_server_id": "aus2uznux2sYKTsEg417",  # gitleaks:ignore
+    "auth_server_id": "aus2uznux2sYKTsEg417",  # gitleaks:allow
     # This is the ID that is designated by Okta for myAir that appears in request bodies during login
-    "authorize_client_id": "0oa2uz04d2Pks2NgR417",  # gitleaks:ignore
+    "authorize_client_id": "0oa2uz04d2Pks2NgR417",  # gitleaks:allow
     # Used as the x-api-key header for the AppSync GraphQL API
-    "myair_api_key": "da2-o66oo6xdnfh5hlfuw5yw5g2dtm",  # gitleaks:ignore
+    "myair_api_key": "da2-o66oo6xdnfh5hlfuw5yw5g2dtm",  # gitleaks:allow
     # The AppSync URL that accepts the access token to return Sleep Records
     "graphql_url": "https://graphql.hyperdrive.resmed.eu/graphql",
     # Redirect url for browser to go to once authentication is complete. Must be the same as what is defined by Okta
@@ -55,11 +54,11 @@ NA_CONFIG: Mapping[str, Any] = {
     # This is the ID that refers to the Email MFA Factor. Not currently setup/used in NA
     "email_factor_id": "xxx",
     # This is the server ID that is designated by Okta for myAir used in authentication urls
-    "auth_server_id": "aus4ccsxvnidQgLmA297",  # gitleaks:ignore
+    "auth_server_id": "aus4ccsxvnidQgLmA297",  # gitleaks:allow
     # This is the ID that is designated by Okta for myAir that appears in request bodies during login
-    "authorize_client_id": "0oa4ccq1v413ypROi297",  # gitleaks:ignore
+    "authorize_client_id": "0oa4ccq1v413ypROi297",  # gitleaks:allow
     # Used as the x-api-key header for the AppSync GraphQL API
-    "myair_api_key": "da2-cenztfjrezhwphdqtwtbpqvzui",  # gitleaks:ignore
+    "myair_api_key": "da2-cenztfjrezhwphdqtwtbpqvzui",  # gitleaks:allow
     # The AppSync URL that accepts the access token to return Sleep Records
     "graphql_url": "https://graphql.myair-prd.dht.live/graphql",
     # Redirect url for browser to go to once authentication is complete. Must be the same as what is defined by Okta

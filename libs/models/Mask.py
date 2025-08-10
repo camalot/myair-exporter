@@ -1,17 +1,5 @@
-# mask_info: {
-#   "maskManufacturerName": "Resmed",
-#   "maskCode": "mirage-quattro-full-face",
-#   "maskType": "Full face",
-#   "localizedName": "Mirage Quattro",
-#   "imagePath": "/v1/masks/mirage_quattro/mirage_quattro_full_face_mask_plus_headgear.jpg",
-#   "maskPatientId": "00uylx14a9T8huxmW297",
-#   "__typename": "Mask"
-# }
-
-from dataclasses import dataclass, asdict, field
-import datetime
-from typing import Optional
 import typing
+from dataclasses import dataclass, asdict, field
 
 from libs import utils
 

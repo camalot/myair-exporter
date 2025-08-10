@@ -1,21 +1,6 @@
-# {
-#     "startDate": "2025-08-01",
-#     "totalUsage": 0,
-#     "sleepScore": 0,
-#     "usageScore": 0,
-#     "ahiScore": 0,
-#     "maskScore": 0,
-#     "leakScore": 0,
-#     "ahi": 0.0,
-#     "maskPairCount": 0,
-#     "leakPercentile": 0.0,
-#     "sleepRecordPatientId": "00uylx14a9T8huxmW297",
-#     "__typename": "SleepRecord"
-#   }
-
+import typing
 from dataclasses import dataclass, asdict, field
 from typing import Optional
-import typing
 
 from libs import utils
 

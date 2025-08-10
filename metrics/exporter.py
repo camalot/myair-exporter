@@ -1,12 +1,13 @@
 import inspect
 import os
 import traceback
-from prometheus_client import start_http_server, Gauge, Enum
+
 from libs.logger import Log
 from libs.enums.loglevel import LogLevel
 from libs.settings import Settings
 from metrics.config import MyAirMetricsConfig
 from metrics.myair import MyAirMetrics
+from prometheus_client import start_http_server 
 
 
 class MetricsExporter:

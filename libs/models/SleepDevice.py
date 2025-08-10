@@ -1,17 +1,7 @@
-# user_device_data: {
-#   "serialNumber": "23191427249",
-#   "deviceType": "AS10",
-#   "lastSleepDataReportTime": "2025-08-07T13:26:36.000+00:00",
-#   "localizedName": "AirSense 10 Respond",
-#   "imagePath": "v1/flowgens/airsense_10_autoset/airsense_10_autoset.png",
-#   "fgDeviceManufacturerName": "Resmed",
-#   "fgDevicePatientId": "00uylx14a9T8huxmW297",
-#   "__typename": "FgDevice"
-# }
-from dataclasses import dataclass, asdict, field
-from typing import Optional
-import libs.utils as utils
 import typing
+from dataclasses import dataclass, asdict, field
+
+import libs.utils as utils
 
 
 @dataclass

@@ -1,31 +1,26 @@
 import asyncio
-import datetime
 import inspect
-import json
 import math
 import os
-import time
 import traceback
-import aiohttp
-import pytz as tz
 
-from prometheus_client import Counter, Gauge
-from libs import settings, utils
+import aiohttp
+
+from libs import settings
 from libs.enums.loglevel import LogLevel
 from libs.logger import Log
+from libs.models.Mask import Mask
+from libs.models.Patient import Patient
 from libs.models.SleepRecord import SleepRecord
 from libs.models.SleepDevice import SleepDevice
-from libs.models.Patient import Patient
-from libs.models.Mask import Mask
 from libs.mongodb.MyAirDevicesDatabase import MyAirDevicesDatabase
-from libs.mongodb.MyAirMasksDatabase import MyAirMasksDatabase
 from libs.mongodb.MyAirLogsDatabase import MyAirLogsDatabase
+from libs.mongodb.MyAirMasksDatabase import MyAirMasksDatabase
 from libs.mongodb.MyAirPatientsDatabase import MyAirPatientsDatabase
 from libs.mongodb.MyAirSleepRecordsDatabase import MyAirSleepRecordsDatabase
-
-
 from libs.resmed.client.myair_client import MyAirConfig
 from libs.resmed.client.rest_client import RESTClient
+from prometheus_client import Gauge
 
 
 class MyAirMetrics:
@@ -155,137 +150,138 @@ class MyAirMetrics:
         return aiohttp.ClientSession(**kwargs)
 
     async def fetch(self):
-        # _method = inspect.stack()[0][3]
-        client_config: MyAirConfig = MyAirConfig(
-            username=self.config.settings.myair["username"],
-            password=self.config.settings.myair["password"],
-            region=self.config.settings.myair["region"],
-            device_token=self.config.settings.myair["device_token"],
-        )
-        client: RESTClient = RESTClient(config=client_config, session=self._create_clientsession())
+        for user in self.config.settings.myair['users']:
+            # _method = inspect.stack()[0][3]
+            client_config: MyAirConfig = MyAirConfig(
+                username=user["username"],
+                password=user["password"],
+                region=user["region"],
+                device_token=user["device_token"],
+            )
+            client: RESTClient = RESTClient(config=client_config, session=self._create_clientsession())
 
-        await client.connect()
+            await client.connect()
 
-        user_device_data = SleepDevice.from_map(await client.get_user_device_data())
-        record_days = self.config.settings.myair["records_days"] or 90
-        months: int = math.ceil(record_days / 30)
-        sleep_records = [SleepRecord.from_map(record) for record in await client.get_sleep_records(months=months)]
-        user_info = Patient.from_map(await client.get_user_info())
-        mask_info = Mask.from_map(await client.get_mask_info())
+            user_device_data = SleepDevice.from_map(await client.get_user_device_data())
+            record_days = self.config.settings.myair["records_days"] or 90
+            months: int = math.ceil(record_days / 30)
+            sleep_records = [SleepRecord.from_map(record) for record in await client.get_sleep_records(months=months)]
+            user_info = Patient.from_map(await client.get_user_info())
+            mask_info = Mask.from_map(await client.get_mask_info())
 
-        # print(f"user_info: {json.dumps(user_info.to_dict(), indent=2)}")
-        # print(f"user_device_data: {json.dumps(user_device_data.to_dict(), indent=2)}")
-        # print(f"mask_info: {json.dumps(mask_info.to_dict(), indent=2)}")
-        # print(f"sleep_records: {json.dumps([record.to_dict() for record in sleep_records], indent=2)}")
+            # print(f"user_info: {json.dumps(user_info.to_dict(), indent=2)}")
+            # print(f"user_device_data: {json.dumps(user_device_data.to_dict(), indent=2)}")
+            # print(f"mask_info: {json.dumps(mask_info.to_dict(), indent=2)}")
+            # print(f"sleep_records: {json.dumps([record.to_dict() for record in sleep_records], indent=2)}")
 
-        await client.close()
+            await client.close()
 
-        self.patient_db.insert(user_info)
-        self.device_db.insert(user_device_data)
+            self.patient_db.insert(user_info)
+            self.device_db.insert(user_device_data)
 
-        self.patient.labels(
-            id=user_info.id, name=f"{user_info.firstName} {user_info.lastName[:1]}", ahi=user_info.userEnteredAhi or 0
-        ).set(1)
+            self.patient.labels(
+                id=user_info.id, name=f"{user_info.firstName} {user_info.lastName[:1]}", ahi=user_info.userEnteredAhi or 0
+            ).set(1)
 
-        devices = self.device_db.list() or []
-        for device in devices:
-            active = device.serialNumber == user_device_data.serialNumber
-            self.device.labels(
-                serialNumber=device.serialNumber,
-                manufacturer=device.fgDeviceManufacturerName,
-                type=device.deviceType,
-                name=device.localizedName,
-                image=device.imagePath,
-            ).set(1 if active else 0)
+            devices = self.device_db.list() or []
+            for device in devices:
+                active = device.serialNumber == user_device_data.serialNumber
+                self.device.labels(
+                    serialNumber=device.serialNumber,
+                    manufacturer=device.fgDeviceManufacturerName,
+                    type=device.deviceType,
+                    name=device.localizedName,
+                    image=device.imagePath,
+                ).set(1 if active else 0)
 
-        self.masks_db.insert(mask_info)
-        masks = self.masks_db.list() or []
+            self.masks_db.insert(mask_info)
+            masks = self.masks_db.list() or []
 
-        for mask in masks:
-            active = mask.maskCode == mask_info.maskCode
-            self.mask.labels(
-                patient=mask.maskPatientId,
-                code=mask.maskCode,
-                name=mask.localizedName,
-                type=mask.maskType,
-                image=mask.imagePath,
-            ).set(1 if active else 0)
+            for mask in masks:
+                active = mask.maskCode == mask_info.maskCode
+                self.mask.labels(
+                    patient=mask.maskPatientId,
+                    code=mask.maskCode,
+                    name=mask.localizedName,
+                    type=mask.maskType,
+                    image=mask.imagePath,
+                ).set(1 if active else 0)
 
-        if sleep_records is not None and len(sleep_records) > 0:
-            for record in sleep_records:
-                print(f"Processing record: {record.startDate} for patient: {record.sleepRecordPatientId}")
+            if sleep_records is not None and len(sleep_records) > 0:
+                for record in sleep_records:
+                    print(f"Processing record: {record.startDate} for patient: {record.sleepRecordPatientId}")
 
-                entry_mask = mask_info
+                    entry_mask = mask_info
 
-                existing_record = self.sleep_records_db.get(record.startDate, record.sleepRecordPatientId)
-                if existing_record and existing_record.maskCode is not None:
-                    entry_mask = self.masks_db.get(record.sleepRecordPatientId, existing_record.maskCode) or mask_info
+                    existing_record = self.sleep_records_db.get(record.startDate, record.sleepRecordPatientId)
+                    if existing_record and existing_record.maskCode is not None:
+                        entry_mask = self.masks_db.get(record.sleepRecordPatientId, existing_record.maskCode) or mask_info
 
-                record.maskCode = entry_mask.maskCode
+                    record.maskCode = entry_mask.maskCode
 
-                self.sleep_records_db.insert(record)
+                    self.sleep_records_db.insert(record)
 
-                self.score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.sleepScore)
+                    self.score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.sleepScore)
 
-                self.usage.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(
-                    record.totalUsage * 60
-                )  # totalUsage is in minutes, convert to seconds
+                    self.usage.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(
+                        record.totalUsage * 60
+                    )  # totalUsage is in minutes, convert to seconds
 
-                self.usage_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.usageScore)
+                    self.usage_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.usageScore)
 
-                self.mask_seal.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.leakPercentile)
+                    self.mask_seal.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.leakPercentile)
 
-                self.mask_seal_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.leakScore)
+                    self.mask_seal_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.leakScore)
 
-                self.mask_onoff_count.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.maskPairCount)
+                    self.mask_onoff_count.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.maskPairCount)
 
-                self.mask_onoff_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.maskScore)
+                    self.mask_onoff_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.maskScore)
 
-                self.ahi.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.ahi)
+                    self.ahi.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.ahi)
 
-                self.ahi_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.ahiScore)
+                    self.ahi_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.ahiScore)

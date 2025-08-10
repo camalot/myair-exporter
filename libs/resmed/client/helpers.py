@@ -5,7 +5,7 @@ from typing import Any
 
 from .const import KEYS_TO_REDACT
 
-REDACTED = "**REDACTED**"  # gitleaks:ignore
+REDACTED = "**REDACTED**"
 
 
 def redact_dict(data: Any | None) -> Any | None:

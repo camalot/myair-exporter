@@ -6,6 +6,7 @@ Exports data from MyAir for consumption by prometheus
 
 ## SAMPLE DATA
 
+<!-- markdownlint-disable -->
 ``` text
 # HELP myair_patient A reference metric for the patient to be used in other metrics
 # TYPE myair_patient gauge
@@ -62,3 +63,4 @@ myair_ahi_score{date="2025-06-01",device="00000000000",mask="mirage-quattro-full
 ...
 myair_ahi_score{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 5.0
 ```
+<!-- markdownlint-enable -->

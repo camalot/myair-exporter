@@ -1,18 +1,5 @@
-# user_info: {
-#   "id": "00uylx14a9T8huxmW297",
-#   "firstName": "Ryan",
-#   "lastName": "Conrad",
-#   "email": "camalot+resmed@gmail.com",
-#   "dateOfBirth": "1977-04-01",
-#   "countryId": "US",
-#   "timezoneId": "America/Chicago",
-#   "gender": "male",
-#   "userEnteredAhi": 120.0,
-#   "__typename": "Patient"
-# }
-from dataclasses import dataclass, asdict, field
-from typing import Optional
 import typing
+from dataclasses import dataclass, asdict, field
 
 from libs import utils
 
