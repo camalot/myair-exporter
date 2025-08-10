@@ -7,7 +7,6 @@ from dotenv import find_dotenv, load_dotenv
 from libs.colors import Colors
 from metrics.exporter import MetricsExporter
 
-
 load_dotenv(find_dotenv())
 
 
