@@ -33,7 +33,7 @@ def get_scalar_result(conn, sql, default_value=None, *args) -> typing.Any:
     try:
         cursor.execute(sql, args)
         return cursor.fetchone()[0]
-    except Exception as ex:
+    except Exception:
         return default_value
 
 

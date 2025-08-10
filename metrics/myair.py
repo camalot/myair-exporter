@@ -13,7 +13,6 @@ from libs.models.Patient import Patient
 from libs.models.SleepDevice import SleepDevice
 from libs.models.SleepRecord import SleepRecord
 from libs.mongodb.MyAirDevicesDatabase import MyAirDevicesDatabase
-from libs.mongodb.MyAirLogsDatabase import MyAirLogsDatabase
 from libs.mongodb.MyAirMasksDatabase import MyAirMasksDatabase
 from libs.mongodb.MyAirPatientsDatabase import MyAirPatientsDatabase
 from libs.mongodb.MyAirSleepRecordsDatabase import MyAirSleepRecordsDatabase

@@ -59,7 +59,9 @@ class Settings:
                     {
                         "username": utils.dict_get(os.environ, f"MAE_MYAIR_USERNAME_{match.group(1)}", required=True),
                         "password": utils.dict_get(os.environ, f"MAE_MYAIR_PASSWORD_{match.group(1)}", required=True),
-                        "device_token": utils.dict_get(os.environ, f"MAE_MYAIR_DEVICE_TOKEN_{match.group(1)}", default_value=None),
+                        "device_token": utils.dict_get(
+                            os.environ, f"MAE_MYAIR_DEVICE_TOKEN_{match.group(1)}", default_value=None
+                        ),
                         "region": utils.dict_get(
                             os.environ, f"MAE_MYAIR_REGION_{match.group(1)}", default_value="NA", required=True
                         ),
