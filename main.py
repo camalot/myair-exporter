@@ -1,13 +1,13 @@
-from dotenv import find_dotenv, load_dotenv
-
-load_dotenv(find_dotenv())
 import asyncio
 import os
 import signal
 from concurrent.futures import ProcessPoolExecutor
 
+from dotenv import find_dotenv, load_dotenv
 from libs.colors import Colors
 from metrics.exporter import MetricsExporter
+
+load_dotenv(find_dotenv())
 
 
 def sighandler(signum: int, frame):
@@ -32,20 +32,22 @@ async def exporter():
         print(Colors.colorize(Colors.FGYELLOW, "<KeyboardInterrupt received>"))
         exit(0)
 
-def nothing():
-    pass
+
+def run_exporter_sync():
+    asyncio.run(exporter())
+
 
 if __name__ == '__main__':
-    asyncio.run(exporter())
-    # loop = asyncio.get_event_loop()
+    loop = asyncio.get_event_loop()
     try:
         signal.signal(signal.SIGTERM, sighandler)
         signal.signal(signal.SIGINT, sighandler)
 
-        # executor = ProcessPoolExecutor(2)
-        # loop.run_in_executor(executor, nothing)
-        # loop.run_forever()
+        executor = ProcessPoolExecutor(2)
+        loop.run_in_executor(executor, run_exporter_sync)
+        loop.run_forever()
     except KeyboardInterrupt:
+        print(Colors.colorize(Colors.FGYELLOW, "<KeyboardInterrupt received>"))
         pass
-    # finally:
-    #     loop.close()
+    finally:
+        loop.close()

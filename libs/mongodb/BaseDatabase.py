@@ -99,7 +99,7 @@ class BaseDatabase:
                 "message": message,
                 "stack_trace": stack if stack else "",
             }
-            self.connection.logs.insert_one(payload) # type: ignore
+            self.connection.logs.insert_one(payload)  # type: ignore
         except Exception as ex:
             self.log(
                 level=loglevel.LogLevel.PRINT,

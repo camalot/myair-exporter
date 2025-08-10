@@ -1,13 +1,14 @@
-import os
 import codecs
 import inspect
+import os
 import traceback
-import yaml
 
+import yaml
 from libs import utils
-from libs.logger import Log
 from libs.enums.loglevel import LogLevel
+from libs.logger import Log
 from libs.settings import Settings
+
 
 class MyAirMetricsConfig:
     def __init__(self, file: str):

@@ -1,15 +1,9 @@
-import glob
-import inspect
-import json
 import os
-import sys
-import traceback
+import re
 import typing
-
 import urllib.parse
 
 from libs import utils
-from libs.enums.loglevel import LogLevel
 
 
 class Settings:
@@ -21,8 +15,7 @@ class Settings:
 
         self.name = None
         self.version = None
-
-        self.log_level = utils.dict_get(os.environ, 'MAE_LOG_LEVEL', default_value = 'DEBUG')
+        self.log_level = utils.dict_get(os.environ, 'MAE_LOG_LEVEL', default_value='DEBUG')
 
         # build db_url from environment variables:
         # MAE_MONGODB_USERNAME
@@ -46,16 +39,36 @@ class Settings:
         self.db_name = utils.dict_get(os.environ, "MAE_MONGODB_DATABASE", default_value="myair", required=True)
 
         self.myair = {
-            "username": utils.dict_get(os.environ, "MAE_MYAIR_USERNAME", required=True),
-            "password": utils.dict_get(os.environ, "MAE_MYAIR_PASSWORD", required=True),
-            "device_token": utils.dict_get(os.environ, "MAE_MYAIR_DEVICE_TOKEN", default_value=None),
-            "region": utils.dict_get(os.environ, "MAE_MYAIR_REGION", default_value="NA", required=True),
             # parse MAE_MYAIR_RECORDS_DAYS as an integer, default to 90 days
-            "records_days": int(utils.dict_get(os.environ, "MAE_MYAIR_RECORDS_DAYS", default_value='90', required=True) or 90),
+            "records_days": int(
+                utils.dict_get(os.environ, "MAE_MYAIR_RECORDS_DAYS", default_value='90', required=True) or 90
+            ),
+            "users": [],
         }
 
-        # print(json.dumps(self.to_dict(), indent=2))
+        # find all environment variables that match: MAE_MYAIR_USERNAME_\d{1,}
 
+        # "username": utils.dict_get(os.environ, "MAE_MYAIR_USERNAME", required=True),
+        # "password": utils.dict_get(os.environ, "MAE_MYAIR_PASSWORD", required=True),
+        # "device_token": utils.dict_get(os.environ, "MAE_MYAIR_DEVICE_TOKEN", default_value=None),
+        # "region": utils.dict_get(os.environ, "MAE_MYAIR_REGION", default_value="NA", required=True),
+
+        for key in os.environ.keys():
+            if match := re.match(r"^MAE_MYAIR_USERNAME_(\d{1,})$", key):
+                self.myair['users'].append(
+                    {
+                        "username": utils.dict_get(os.environ, f"MAE_MYAIR_USERNAME_{match.group(1)}", required=True),
+                        "password": utils.dict_get(os.environ, f"MAE_MYAIR_PASSWORD_{match.group(1)}", required=True),
+                        "device_token": utils.dict_get(
+                            os.environ, f"MAE_MYAIR_DEVICE_TOKEN_{match.group(1)}", default_value=None
+                        ),
+                        "region": utils.dict_get(
+                            os.environ, f"MAE_MYAIR_REGION_{match.group(1)}", default_value="NA", required=True
+                        ),
+                    }
+                )
+
+        # print(json.dumps(self.to_dict(), indent=2))
 
     def to_dict(self):
         return self.__dict__

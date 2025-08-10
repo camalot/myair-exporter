@@ -1,5 +1,5 @@
 ---
-name: MyAir Exporter Publish
+name: MyAir Exporter Publish Beta
 "on": # quoted to avoid YAML lint 'truthy' warning
   push:
     branches:

@@ -23,7 +23,7 @@ class MyAirSleepRecordsDatabase(Database):
         try:
             if self.connection is None or self.client is None:
                 self.open()
-            if self.collection_name not in self.connection.list_collection_names(): # type: ignore
+            if self.collection_name not in self.connection.list_collection_names():  # type: ignore
                 return []
             # get the sleep records from the collection and return them as a list of models.SleepRecord
             records = self.connection[self.collection_name].find({})  # type: ignore
@@ -46,10 +46,9 @@ class MyAirSleepRecordsDatabase(Database):
             if self.connection is None or self.client is None:
                 raise ValueError("Database connection is not open")
 
-            record = self.connection[self.collection_name].find_one({
-                "startDate": startDate,
-                "sleepRecordPatientId": patientId
-            })  # type: ignore
+            record = self.connection[self.collection_name].find_one(
+                {"startDate": startDate, "sleepRecordPatientId": patientId}
+            )  # type: ignore
             if record:
                 return SleepRecord.from_dict(record)
             return None
@@ -93,10 +92,9 @@ class MyAirSleepRecordsDatabase(Database):
                 raise ValueError("Database connection is not open")
 
             # do not update the maskCode if it is already set
-            existing_record = self.connection[self.collection_name].find_one({
-                "startDate": record.startDate,
-                "sleepRecordPatientId": record.sleepRecordPatientId
-            })  # type: ignore
+            existing_record = self.connection[self.collection_name].find_one(
+                {"startDate": record.startDate, "sleepRecordPatientId": record.sleepRecordPatientId}
+            )  # type: ignore
 
             if existing_record:
                 if existing_record.get("maskCode") is not None:
@@ -104,14 +102,9 @@ class MyAirSleepRecordsDatabase(Database):
                     record.maskCode = existing_record["maskCode"]
 
             self.connection[self.collection_name].update_one(
-                {
-                    "startDate": record.startDate,
-                    "sleepRecordPatientId": record.sleepRecordPatientId
-                },
-                {
-                    "$set": record.to_dict()
-                },
-                upsert=True
+                {"startDate": record.startDate, "sleepRecordPatientId": record.sleepRecordPatientId},
+                {"$set": record.to_dict()},
+                upsert=True,
             )
         except Exception as ex:
             self.log(

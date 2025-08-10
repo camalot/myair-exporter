@@ -1,14 +1,14 @@
 import sys
 import typing
 
-from libs.enums.loglevel import LogLevel
-# from libs.mongodb.logs import LogsDatabase
 from libs.colors import Colors
+from libs.enums.loglevel import LogLevel
+from libs.mongodb.MyAirLogsDatabase import MyAirLogsDatabase
 
 
 class Log:
     def __init__(self, minimumLogLevel: LogLevel = LogLevel.DEBUG):
-        # self.logs_db = LogsDatabase()
+        self.logs_db = MyAirLogsDatabase()
         self.minimum_log_level = minimumLogLevel
 
     def __write(
@@ -28,50 +28,20 @@ class Log:
         if stackTrace:
             print(Colors.colorize(color, stackTrace), file=file)
 
-        # if level >= self.minimum_log_level:
-        #     self.logs_db.insert_log(guildId=guildId, level=level, method=method, message=message, stackTrace=stackTrace)
+        if level >= self.minimum_log_level:
+            self.logs_db.insert_log(level=level, method=method, message=message, stack=stackTrace)
 
     def debug(self, method: str, message: str, stackTrace: typing.Optional[str] = None):
-        self.__write(
-            level=LogLevel.DEBUG,
-            method=method,
-            message=message,
-            stackTrace=stackTrace,
-            file=sys.stdout,
-        )
+        self.__write(level=LogLevel.DEBUG, method=method, message=message, stackTrace=stackTrace, file=sys.stdout)
 
     def info(self, method: str, message: str, stackTrace: typing.Optional[str] = None):
-        self.__write(
-            level=LogLevel.INFO,
-            method=method,
-            message=message,
-            stackTrace=stackTrace,
-            file=sys.stdout,
-        )
+        self.__write(level=LogLevel.INFO, method=method, message=message, stackTrace=stackTrace, file=sys.stdout)
 
     def warn(self, method: str, message: str, stackTrace: typing.Optional[str] = None):
-        self.__write(
-            level=LogLevel.WARNING,
-            method=method,
-            message=message,
-            stackTrace=stackTrace,
-            file=sys.stdout,
-        )
+        self.__write(level=LogLevel.WARNING, method=method, message=message, stackTrace=stackTrace, file=sys.stdout)
 
     def error(self, method: str, message: str, stackTrace: typing.Optional[str] = None):
-        self.__write(
-            level=LogLevel.ERROR,
-            method=method,
-            message=message,
-            stackTrace=stackTrace,
-            file=sys.stderr,
-        )
+        self.__write(level=LogLevel.ERROR, method=method, message=message, stackTrace=stackTrace, file=sys.stderr)
 
     def fatal(self, method: str, message: str, stackTrace: typing.Optional[str] = None):
-        self.__write(
-            level=LogLevel.FATAL,
-            method=method,
-            message=message,
-            stackTrace=stackTrace,
-            file=sys.stderr,
-        )
+        self.__write(level=LogLevel.FATAL, method=method, message=message, stackTrace=stackTrace, file=sys.stderr)

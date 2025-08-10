@@ -1,6 +1,5 @@
 import os
 
-from libs import settings
 from libs.mongodb.BaseDatabase import BaseDatabase
 
 
