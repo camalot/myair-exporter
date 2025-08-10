@@ -5,14 +5,13 @@ import os
 import traceback
 
 import aiohttp
-
 from libs import settings
 from libs.enums.loglevel import LogLevel
 from libs.logger import Log
 from libs.models.Mask import Mask
 from libs.models.Patient import Patient
-from libs.models.SleepRecord import SleepRecord
 from libs.models.SleepDevice import SleepDevice
+from libs.models.SleepRecord import SleepRecord
 from libs.mongodb.MyAirDevicesDatabase import MyAirDevicesDatabase
 from libs.mongodb.MyAirLogsDatabase import MyAirLogsDatabase
 from libs.mongodb.MyAirMasksDatabase import MyAirMasksDatabase
@@ -47,98 +46,98 @@ class MyAirMetrics:
 
         self.patient = Gauge(
             namespace=self.namespace,
-            name=f"patient",
+            name="patient",
             documentation="A reference metric for the patient to be used in other metrics",
             labelnames=["id", "name", "ahi"],
         )
 
         self.device = Gauge(
             namespace=self.namespace,
-            name=f"device",
+            name="device",
             documentation="A reference metric for the device to be used in other metrics",
             labelnames=["serialNumber", "manufacturer", "type", "name", "image"],
         )
 
         self.mask = Gauge(
             namespace=self.namespace,
-            name=f"mask",
+            name="mask",
             documentation="A reference metric for the mask to be used in other metrics",
             labelnames=["patient", "code", "name", "type", "image"],
         )
 
         self.score = Gauge(
             namespace=self.namespace,
-            name=f"score",
+            name="score",
             documentation="myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories: usage, mask seal, events, and mask on/off. The maximum score you can get is 100 points.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.usage = Gauge(
             namespace=self.namespace,
-            name=f"usage_seconds",
+            name="usage_seconds",
             documentation="The MyAir usage time in seconds",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.usage_score = Gauge(
             namespace=self.namespace,
-            name=f"usage_score",
+            name="usage_score",
             documentation="The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.mask_seal = Gauge(
             namespace=self.namespace,
-            name=f"mask_seal",
+            name="mask_seal",
             documentation="The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.mask_seal_score = Gauge(
             namespace=self.namespace,
-            name=f"mask_seal_score",
+            name="mask_seal_score",
             documentation="Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.mask_onoff_count = Gauge(
             namespace=self.namespace,
-            name=f"mask_onoff_count",
+            name="mask_onoff_count",
             documentation="The MyAir mask on/off status. The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.mask_onoff_score = Gauge(
             namespace=self.namespace,
-            name=f"mask_onoff_score",
+            name="mask_onoff_score",
             documentation="The MyAir mask on/off score. The fewer times you take your mask on and off throughout the night, the more points you get. 1-2: 5 points, 3: 4 points, 4: 3 points, 5: 2 points, 6 or more: 0 points.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.ahi = Gauge(
             namespace=self.namespace,
-            name=f"ahi",
+            name="ahi",
             documentation="Your CPAP machine notes the number of breathing events you have in each hour. This number can help measure how well your treatment is working. When you have an apnea, air stops flowing to your lungs for 10 seconds or longer -- that is, you actually stop breathing.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
         self.ahi_score = Gauge(
             namespace=self.namespace,
-            name=f"ahi_score",
+            name="ahi_score",
             documentation="The fewer breathing events you have each hour, the more points you get. These breathing events are also known as the apnea-hypopnea index (or AHI). myAir measures how many times your breathing partially or fully stops each hour. If you have minimal events, you get 4 to 5 points.",
             labelnames=["patient", "device", "date", "mask"],
         )
 
-        self.log.debug(f"{self._module}.{self._class}.{_method}", f"Metrics initialized")
+        self.log.debug(f"{self._module}.{self._class}.{_method}", "Metrics initialized")
 
     async def run_metrics_loop(self):
         """Metrics fetching loop"""
         _method = inspect.stack()[0][3]
         while True:
             try:
-                self.log.debug(f"{self._module}.{self._class}.{_method}", f"Begin metrics fetch")
+                self.log.debug(f"{self._module}.{self._class}.{_method}", "Begin metrics fetch")
                 await self.fetch()
-                self.log.debug(f"{self._module}.{self._class}.{_method}", f"End metrics fetch")
+                self.log.debug(f"{self._module}.{self._class}.{_method}", "End metrics fetch")
                 self.log.debug(
                     f"{self._module}.{self._class}.{_method}", f"Sleeping for {self.polling_interval_seconds} seconds"
                 )
@@ -180,7 +179,9 @@ class MyAirMetrics:
             self.device_db.insert(user_device_data)
 
             self.patient.labels(
-                id=user_info.id, name=f"{user_info.firstName} {user_info.lastName[:1]}", ahi=user_info.userEnteredAhi or 0
+                id=user_info.id,
+                name=f"{user_info.firstName} {user_info.lastName[:1]}",
+                ahi=user_info.userEnteredAhi or 0,
             ).set(1)
 
             devices = self.device_db.list() or []
@@ -215,7 +216,9 @@ class MyAirMetrics:
 
                     existing_record = self.sleep_records_db.get(record.startDate, record.sleepRecordPatientId)
                     if existing_record and existing_record.maskCode is not None:
-                        entry_mask = self.masks_db.get(record.sleepRecordPatientId, existing_record.maskCode) or mask_info
+                        entry_mask = (
+                            self.masks_db.get(record.sleepRecordPatientId, existing_record.maskCode) or mask_info
+                        )
 
                     record.maskCode = entry_mask.maskCode
 

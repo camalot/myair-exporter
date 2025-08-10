@@ -59,7 +59,7 @@ def get_random_name(noun_count=1, adjective_count=1) -> str:
         nouns = load_from_gist("nouns", noun_count)
         results = adjectives + nouns
         return " ".join(w.title() for w in results)
-    except Exception as ex:
+    except Exception:
         try:
             nouns = requests.get(f"https://random-word-form.herokuapp.com/random/noun?count={str(noun_count)}").json()
             adjectives = requests.get(
@@ -67,13 +67,13 @@ def get_random_name(noun_count=1, adjective_count=1) -> str:
             ).json()
             results = adjectives + nouns
             return " ".join(w.title() for w in results)
-        except Exception as ex:
+        except Exception:
             try:
                 results = requests.get(
                     f"https://random-word-api.herokuapp.com/word?number={str(noun_count + adjective_count)}&swear=0"
                 ).json()
                 return " ".join(w.title() for w in results)
-            except Exception as ex:
+            except Exception:
                 return " ".join(
                     random.sample(fallback_adjectives, adjective_count) + random.sample(fallback_nouns, noun_count)
                 )

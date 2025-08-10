@@ -2,12 +2,12 @@ import inspect
 import os
 import traceback
 
-from libs.logger import Log
 from libs.enums.loglevel import LogLevel
+from libs.logger import Log
 from libs.settings import Settings
 from metrics.config import MyAirMetricsConfig
 from metrics.myair import MyAirMetrics
-from prometheus_client import start_http_server 
+from prometheus_client import start_http_server
 
 
 class MetricsExporter:
@@ -21,7 +21,7 @@ class MetricsExporter:
             log_level = LogLevel.DEBUG
         self.log = Log(log_level)
 
-        self.log.debug(f"{self._module}.{self._class}.{_method}", f"Exporter initialized")
+        self.log.debug(f"{self._module}.{self._class}.{_method}", "Exporter initialized")
 
     async def run(self):
         _method = inspect.stack()[1][3]

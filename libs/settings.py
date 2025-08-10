@@ -43,9 +43,8 @@ class Settings:
             "records_days": int(
                 utils.dict_get(os.environ, "MAE_MYAIR_RECORDS_DAYS", default_value='90', required=True) or 90
             ),
-            "users": []
+            "users": [],
         }
-
 
         # find all environment variables that match: MAE_MYAIR_USERNAME_\d{1,}
 
@@ -55,13 +54,17 @@ class Settings:
         # "region": utils.dict_get(os.environ, "MAE_MYAIR_REGION", default_value="NA", required=True),
 
         for key in os.environ.keys():
-            if (match := re.match(r"^MAE_MYAIR_USERNAME_(\d{1,})$", key)):
-                self.myair['users'].append({
-                    "username": utils.dict_get(os.environ, f"MAE_MYAIR_USERNAME_{match.group(1)}", required=True),
-                    "password": utils.dict_get(os.environ, f"MAE_MYAIR_PASSWORD_{match.group(1)}", required=True),
-                    "device_token": utils.dict_get(os.environ, f"MAE_MYAIR_DEVICE_TOKEN_{match.group(1)}", default_value=None),
-                    "region": utils.dict_get(os.environ, f"MAE_MYAIR_REGION_{match.group(1)}", default_value="NA", required=True),
-                })
+            if match := re.match(r"^MAE_MYAIR_USERNAME_(\d{1,})$", key):
+                self.myair['users'].append(
+                    {
+                        "username": utils.dict_get(os.environ, f"MAE_MYAIR_USERNAME_{match.group(1)}", required=True),
+                        "password": utils.dict_get(os.environ, f"MAE_MYAIR_PASSWORD_{match.group(1)}", required=True),
+                        "device_token": utils.dict_get(os.environ, f"MAE_MYAIR_DEVICE_TOKEN_{match.group(1)}", default_value=None),
+                        "region": utils.dict_get(
+                            os.environ, f"MAE_MYAIR_REGION_{match.group(1)}", default_value="NA", required=True
+                        ),
+                    }
+                )
 
         # print(json.dumps(self.to_dict(), indent=2))
 

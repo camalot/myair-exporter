@@ -1,9 +1,9 @@
 import sys
 import typing
 
-from libs.mongodb.MyAirLogsDatabase import MyAirLogsDatabase
 from libs.colors import Colors
 from libs.enums.loglevel import LogLevel
+from libs.mongodb.MyAirLogsDatabase import MyAirLogsDatabase
 
 
 class Log:

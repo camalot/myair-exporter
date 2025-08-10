@@ -1,6 +1,5 @@
 from dotenv import find_dotenv, load_dotenv
 
-load_dotenv(find_dotenv())
 import asyncio
 import os
 import signal
@@ -8,6 +7,9 @@ from concurrent.futures import ProcessPoolExecutor
 
 from libs.colors import Colors
 from metrics.exporter import MetricsExporter
+
+
+load_dotenv(find_dotenv())
 
 
 def sighandler(signum: int, frame):
