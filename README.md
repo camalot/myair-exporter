@@ -1,0 +1,66 @@
+# MyAir Prometheus Exporter
+
+This uses the rest client used in [HACS Resmed MyAir Sensors](https://github.com/prestomation/resmed_myair_sensors)
+
+Exports data from MyAir for consumption by prometheus
+
+## SAMPLE DATA
+
+<!-- markdownlint-disable -->
+``` text
+# HELP myair_patient A reference metric for the patient to be used in other metrics
+# TYPE myair_patient gauge
+myair_patient{ahi="50.0",id="xxxxxxxxxxxxxx",name="John D"} 1.0
+# HELP myair_device A reference metric for the device to be used in other metrics
+# TYPE myair_device gauge
+myair_device{image="https://static.myair-prd.dht.live/v1/flowgens/airsense_10_autoset/airsense_10_autoset.png",manufacturer="Resmed",name="AirSense 10 Respond",serialNumber="00000000000",type="AS10"} 1.0
+# HELP myair_mask A reference metric for the mask to be used in other metrics
+# TYPE myair_mask gauge
+myair_mask{code="mirage-quattro-full-face",image="https://static.myair-prd.dht.live//v1/masks/mirage_quattro/mirage_quattro_full_face_mask_plus_headgear.jpg",name="Mirage Quattro",patient="xxxxxxxxxxxxxx",type="Full face"} 1.0
+# HELP myair_score myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories: usage, mask seal, events, and mask on/off. The maximum score you can get is 100 points.
+# TYPE myair_score gauge
+myair_score{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_score{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 100.0
+# HELP myair_usage_seconds The MyAir usage time in seconds
+# TYPE myair_usage_seconds gauge
+myair_usage_seconds{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_usage_seconds{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 25320.0
+# HELP myair_usage_score The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points.
+# TYPE myair_usage_score gauge
+myair_usage_score{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_usage_score{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 70.0
+# HELP myair_mask_seal The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.
+# TYPE myair_mask_seal gauge
+myair_mask_seal{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_mask_seal{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 10.8
+# HELP myair_mask_seal_score Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.
+# TYPE myair_mask_seal_score gauge
+myair_mask_seal_score{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_mask_seal_score{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 5.0
+# HELP myair_mask_onoff_count The MyAir mask on/off status. The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.
+# TYPE myair_mask_onoff_count gauge
+myair_mask_onoff_count{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_mask_onoff_count{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 1.0
+# HELP myair_mask_onoff_score The MyAir mask on/off score. The fewer times you take your mask on and off throughout the night, the more points you get. 1-2: 5 points, 3: 4 points, 4: 3 points, 5: 2 points, 6 or more: 0 points.
+# TYPE myair_mask_onoff_score gauge
+myair_mask_onoff_score{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_mask_onoff_score{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 5.0
+# HELP myair_ahi Your CPAP machine notes the number of breathing events you have in each hour. This number can help measure how well your treatment is working. When you have an apnea, air stops flowing to your lungs for 10 seconds or longer -- that is, you actually stop breathing.
+# TYPE myair_ahi gauge
+myair_ahi{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_ahi{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 3.5
+# HELP myair_ahi_score The fewer breathing events you have each hour, the more points you get. These breathing events are also known as the apnea-hypopnea index (or AHI). myAir measures how many times your breathing partially or fully stops each hour. If you have minimal events, you get 4 to 5 points.
+# TYPE myair_ahi_score gauge
+myair_ahi_score{date="2025-06-01",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 0.0
+...
+myair_ahi_score{date="2025-08-06",device="00000000000",mask="mirage-quattro-full-face",patient="xxxxxxxxxxxxxx"} 5.0
+```
+<!-- markdownlint-enable -->

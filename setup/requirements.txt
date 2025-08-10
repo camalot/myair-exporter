@@ -1,0 +1,9 @@
+validators==0.35.0
+python-dotenv==1.1.1
+requests
+pytz
+aiohttp~=3.12.15
+prometheus_client~=0.22.1
+pyyaml~=6.0
+pymongo==4.14.0
+PyJWT~=2.10.1
