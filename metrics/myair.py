@@ -194,6 +194,9 @@ class MyAirMetrics:
                     if device.lastSleepDataReportTime
                     else None
                 )
+                # if the date is today, we need to subtract 1 day
+                if lastSleepDataReport and lastSleepDataReport.date() == datetime.datetime.now().date():
+                    lastSleepDataReport -= datetime.timedelta(days=1)
                 trimmed_date = lastSleepDataReport.strftime("%Y-%m-%d") if lastSleepDataReport else ""
                 self.device.labels(
                     serialNumber=device.serialNumber,
