@@ -185,6 +185,9 @@ class MyAirMetrics:
             ).set(1)
 
             lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
+            if lastReportDate is None:
+                yesterday : datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
+                lastReportDate = yesterday.strftime("%Y-%m-%d")
 
             devices = self.device_db.list() or []
             for device in devices:
