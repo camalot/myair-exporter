@@ -55,7 +55,7 @@ class MyAirMetrics:
             namespace=self.namespace,
             name="device",
             documentation="A reference metric for the device to be used in other metrics",
-            labelnames=["serialNumber", "manufacturer", "type", "name", "image", "lastReportDate"],
+            labelnames=["serialNumber", "manufacturer", "type", "name", "image", "lastReportDate", "patient"],
         )
 
         self.mask = Gauge(
@@ -198,6 +198,7 @@ class MyAirMetrics:
                     name=device.localizedName,
                     image=device.imagePath,
                     lastReportDate=trimmed_date,
+                    patient=device.fgDevicePatientId,
                 ).set(1 if active else 0)
 
             self.masks_db.insert(mask_info)
