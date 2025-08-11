@@ -28,8 +28,7 @@ class MyAirSleepRecordsDatabase(Database):
             # order by startDate descending
             # only if the sleepScore is not 0
             record = self.connection[self.collection_name].find_one(  # type: ignore
-                {"sleepRecordPatientId": patientId, "sleepScore": {"$ne": 0}},
-                sort=[("startDate", -1)],
+                {"sleepRecordPatientId": patientId, "sleepScore": {"$ne": 0}}, sort=[("startDate", -1)]
             )
             if record:
                 return SleepRecord.from_dict(record).startDate
