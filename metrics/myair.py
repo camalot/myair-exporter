@@ -184,27 +184,19 @@ class MyAirMetrics:
                 ahi=user_info.userEnteredAhi or 0,
             ).set(1)
 
+            lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
+
             devices = self.device_db.list() or []
             for device in devices:
                 active = device.serialNumber == user_device_data.serialNumber
-                # trim datetime from "YYYY-MM-DDTHH:MM:SS.ssssss+00:00" to "<YYYY-MM-DD>"
-                # convert string to datetime
-                lastSleepDataReport = (
-                    datetime.datetime.fromisoformat(device.lastSleepDataReportTime)
-                    if device.lastSleepDataReportTime
-                    else None
-                )
-                # if the date is today, we need to subtract 1 day
-                if lastSleepDataReport and lastSleepDataReport.date() == datetime.datetime.now().date():
-                    lastSleepDataReport -= datetime.timedelta(days=1)
-                trimmed_date = lastSleepDataReport.strftime("%Y-%m-%d") if lastSleepDataReport else ""
+
                 self.device.labels(
                     serialNumber=device.serialNumber,
                     manufacturer=device.fgDeviceManufacturerName,
                     type=device.deviceType,
                     name=device.localizedName,
                     image=device.imagePath,
-                    lastReportDate=trimmed_date,
+                    lastReportDate=lastReportDate,
                     patient=device.fgDevicePatientId,
                 ).set(1 if active else 0)
 

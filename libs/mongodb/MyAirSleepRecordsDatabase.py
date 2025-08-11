@@ -17,6 +17,30 @@ class MyAirSleepRecordsDatabase(Database):
         self.collection_name = "myair_sleep_records"
         pass
 
+    def getLastReportDate(self, patientId: str) -> str | None:
+        """Get the last report date for a patient."""
+        _method = inspect.stack()[0][3]
+        try:
+            if self.connection is None or self.client is None:
+                self.open()
+            if self.collection_name not in self.connection.list_collection_names():  # type: ignore
+                return None
+
+            record = self.connection[self.collection_name].find_one(  # type: ignore
+                {"sleepRecordPatientId": patientId}
+            )  # type: ignore
+            if record:
+                return SleepRecord.from_dict(record).startDate
+            return None
+        except Exception as ex:
+            self.log(
+                level=loglevel.LogLevel.ERROR,
+                method=f"{self._module}.{self._class}.{_method}",
+                message=f"{ex}",
+                stackTrace=traceback.format_exc(),
+            )
+            return None
+
     def list(self) -> list[SleepRecord]:
         """Get all sleep records."""
         _method = inspect.stack()[0][3]
