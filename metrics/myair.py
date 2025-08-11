@@ -189,7 +189,11 @@ class MyAirMetrics:
                 active = device.serialNumber == user_device_data.serialNumber
                 # trim datetime from "YYYY-MM-DDTHH:MM:SS.ssssss+00:00" to "<YYYY-MM-DD>"
                 # convert string to datetime
-                lastSleepDataReport = datetime.datetime.fromisoformat(device.lastSleepDataReportTime) if device.lastSleepDataReportTime else None
+                lastSleepDataReport = (
+                    datetime.datetime.fromisoformat(device.lastSleepDataReportTime)
+                    if device.lastSleepDataReportTime
+                    else None
+                )
                 trimmed_date = lastSleepDataReport.strftime("%Y-%m-%d") if lastSleepDataReport else ""
                 self.device.labels(
                     serialNumber=device.serialNumber,

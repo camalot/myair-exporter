@@ -85,7 +85,7 @@ class MyAirDevicesDatabase(Database):
                 if existing_device["lastSleepDataReportTime"] != device.lastSleepDataReportTime:
                     self.connection[self.collection_name].update_one(  # type: ignore
                         {"_id": existing_device["_id"]},
-                        {"$set": {"lastSleepDataReportTime": device.lastSleepDataReportTime}}
+                        {"$set": {"lastSleepDataReportTime": device.lastSleepDataReportTime}},
                     )
                 return True
             self.connection[self.collection_name].insert_one(device.to_dict())  # type: ignore
