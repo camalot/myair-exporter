@@ -81,12 +81,13 @@ class MyAirDevicesDatabase(Database):
                 {"fgDevicePatientId": device.fgDevicePatientId, "serialNumber": device.serialNumber}
             )
             if existing_device:
-                self.log(
-                    level=loglevel.LogLevel.INFO,
-                    method=f"{self._module}.{self._class}.{_method}",
-                    message=f"Device {device.serialNumber} already exists, skipping insert.",
-                )
-                return False
+                # update the lastSleepDataReportTime if it has changed
+                if existing_device["lastSleepDataReportTime"] != device.lastSleepDataReportTime:
+                    self.connection[self.collection_name].update_one(  # type: ignore
+                        {"_id": existing_device["_id"]},
+                        {"$set": {"lastSleepDataReportTime": device.lastSleepDataReportTime}}
+                    )
+                return True
             self.connection[self.collection_name].insert_one(device.to_dict())  # type: ignore
             return True
         except Exception as ex:

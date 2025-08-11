@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import inspect
 import math
 import os
@@ -54,7 +55,7 @@ class MyAirMetrics:
             namespace=self.namespace,
             name="device",
             documentation="A reference metric for the device to be used in other metrics",
-            labelnames=["serialNumber", "manufacturer", "type", "name", "image"],
+            labelnames=["serialNumber", "manufacturer", "type", "name", "image", "lastReportDate"],
         )
 
         self.mask = Gauge(
@@ -186,12 +187,17 @@ class MyAirMetrics:
             devices = self.device_db.list() or []
             for device in devices:
                 active = device.serialNumber == user_device_data.serialNumber
+                # trim datetime from "YYYY-MM-DDTHH:MM:SS.ssssss+00:00" to "<YYYY-MM-DD>"
+                # convert string to datetime
+                lastSleepDataReport = datetime.datetime.fromisoformat(device.lastSleepDataReportTime) if device.lastSleepDataReportTime else None
+                trimmed_date = lastSleepDataReport.strftime("%Y-%m-%d") if lastSleepDataReport else ""
                 self.device.labels(
                     serialNumber=device.serialNumber,
                     manufacturer=device.fgDeviceManufacturerName,
                     type=device.deviceType,
                     name=device.localizedName,
                     image=device.imagePath,
+                    lastReportDate=trimmed_date,
                 ).set(1 if active else 0)
 
             self.masks_db.insert(mask_info)
