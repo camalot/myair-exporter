@@ -25,10 +25,11 @@ class MyAirSleepRecordsDatabase(Database):
                 self.open()
             if self.collection_name not in self.connection.list_collection_names():  # type: ignore
                 return None
-
+            # order by startDate descending
             record = self.connection[self.collection_name].find_one(  # type: ignore
-                {"sleepRecordPatientId": patientId}
-            )  # type: ignore
+                {"sleepRecordPatientId": patientId},
+                sort=[("startDate", -1)],
+            )
             if record:
                 return SleepRecord.from_dict(record).startDate
             return None
