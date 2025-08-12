@@ -41,7 +41,8 @@ class Settings:
         self.myair = {
             "include_zero_scores": utils.dict_get(
                 os.environ, "MAE_MYAIR_INCLUDE_ZERO_SCORES", default_value="FALSE", required=True
-            ).upper() == "TRUE",
+            ).upper()
+            == "TRUE",
             # parse MAE_MYAIR_RECORDS_DAYS as an integer, default to 90 days
             "records_days": int(
                 utils.dict_get(os.environ, "MAE_MYAIR_RECORDS_DAYS", default_value='90', required=True) or 90

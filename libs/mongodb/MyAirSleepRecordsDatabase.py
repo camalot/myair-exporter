@@ -26,10 +26,12 @@ class MyAirSleepRecordsDatabase(Database):
             if self.collection_name not in self.connection.list_collection_names():  # type: ignore
                 return 0
             # sum the usage seconds for the given patient, and mask
-            cursor = self.connection[self.collection_name].aggregate([  # type: ignore
-                {"$match": {"sleepRecordPatientId": patientId}},
-                {"$group": {"_id": None, "total": {"$sum": "$totalUsage"}}}
-            ])
+            cursor = self.connection[self.collection_name].aggregate(  # type: ignore
+                [
+                    {"$match": {"sleepRecordPatientId": patientId}},
+                    {"$group": {"_id": None, "total": {"$sum": "$totalUsage"}}},
+                ]
+            )
             result = next(cursor, None)
             return (result["total"] * 60) if result else 0
         except Exception as ex:
@@ -41,7 +43,7 @@ class MyAirSleepRecordsDatabase(Database):
             )
             return 0
 
-    def getTotalDaysCount(self, patientId: str, includeZero: bool=False) -> int:
+    def getTotalDaysCount(self, patientId: str, includeZero: bool = False) -> int:
         """Get the total number of days a patient has used a device."""
         _method = inspect.stack()[0][3]
         try:
