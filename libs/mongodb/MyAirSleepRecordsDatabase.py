@@ -17,6 +17,52 @@ class MyAirSleepRecordsDatabase(Database):
         self.collection_name = "myair_sleep_records"
         pass
 
+    def getTotalUsageSeconds(self, patientId: str) -> int:
+        """Get the total usage time of a patient's device."""
+        _method = inspect.stack()[0][3]
+        try:
+            if self.connection is None or self.client is None:
+                self.open()
+            if self.collection_name not in self.connection.list_collection_names():  # type: ignore
+                return 0
+            # sum the usage seconds for the given patient, and mask
+            cursor = self.connection[self.collection_name].aggregate([  # type: ignore
+                {"$match": {"sleepRecordPatientId": patientId}},
+                {"$group": {"_id": None, "total": {"$sum": "$totalUsage"}}}
+            ])
+            result = next(cursor, None)
+            return (result["total"] * 60) if result else 0
+        except Exception as ex:
+            self.log(
+                level=loglevel.LogLevel.ERROR,
+                method=f"{self._module}.{self._class}.{_method}",
+                message=f"{ex}",
+                stackTrace=traceback.format_exc(),
+            )
+            return 0
+
+    def getTotalDaysCount(self, patientId: str, includeZero: bool=False) -> int:
+        """Get the total number of days a patient has used a device."""
+        _method = inspect.stack()[0][3]
+        try:
+            if self.connection is None or self.client is None:
+                self.open()
+            if self.collection_name not in self.connection.list_collection_names():  # type: ignore
+                return 0
+            # count the number of distinct dates for the given patient and device
+            count = self.connection[self.collection_name].count_documents(  # type: ignore
+                {"sleepRecordPatientId": patientId, "sleepScore": {"$gte": 0 if includeZero else 1}}
+            )
+            return count
+        except Exception as ex:
+            self.log(
+                level=loglevel.LogLevel.ERROR,
+                method=f"{self._module}.{self._class}.{_method}",
+                message=f"{ex}",
+                stackTrace=traceback.format_exc(),
+            )
+            return 0
+
     def getLastReportDate(self, patientId: str) -> str | None:
         """Get the last report date for a patient."""
         _method = inspect.stack()[0][3]
