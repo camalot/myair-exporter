@@ -326,6 +326,7 @@ class MyAirMetrics:
                 ).set(1 if active else 0)
 
             totalDays = self.sleep_records_db.getTotalDaysCount(user_info.id, includeZero=includeZero)
+            self.total_days_count.clear()
             self.total_days_count.labels(
                 patient=user_info.id,
                 device=user_device_data.serialNumber,
