@@ -313,7 +313,9 @@ class MyAirMetrics:
 
             usageSeconds = self.sleep_records_db.getTotalUsageSeconds(patientId=device.fgDevicePatientId)
             self.total_usage_seconds.clear()
-            self.total_usage_seconds.labels(patient=device.fgDevicePatientId).set(usageSeconds)
+            usageSeconds = self.sleep_records_db.getTotalUsageSeconds(patientId=user_device_data.fgDevicePatientId)
+            self.total_usage_seconds.clear()
+            self.total_usage_seconds.labels(patient=user_device_data.fgDevicePatientId).set(usageSeconds)
 
             masks = self.masks_db.list() or []
             for mask in masks:
