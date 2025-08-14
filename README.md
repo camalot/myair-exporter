@@ -25,7 +25,8 @@ Exports data from MyAir for consumption by prometheus
 | MAE_MYAIR_DEVICE_TOKEN_N       | MyAir device token (optional, usually not required)                                                          | (empty)      |
 | MAE_MYAIR_REGION_N             | MyAir region (e.g., NA, EU)                                                                             | NA           |
 
-> [!NOTE] `MAE_MYAIR_<PROPERTY>_N` should replace `N` with an integer to indicate 1 or more users to populate data from.
+> [!NOTE]
+> `MAE_MYAIR_<PROPERTY>_N` should replace `N` with an integer to indicate 1 or more users to populate data from.
 
 ## SAMPLE DATA
 
