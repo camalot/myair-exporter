@@ -1,0 +1,3994 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "12.2.0-16952534486"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 39,
+      "panels": [],
+      "title": "TODAY ($lastReportDate)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories.\n\nUsage hours, Mask seal, Events per hour, Mask on/off",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 100,
+          "min": 0,
+          "noValue": "?",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 15
+              },
+              {
+                "color": "dark-yellow",
+                "value": 30
+              },
+              {
+                "color": "dark-purple",
+                "value": 45
+              },
+              {
+                "color": "dark-blue",
+                "value": 60
+              },
+              {
+                "color": "semi-dark-blue",
+                "value": 75
+              },
+              {
+                "color": "dark-green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "avg(myair_score{patient=~\"$patient\", date=~\"$lastReportDate\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "AVERAGE",
+          "range": true,
+          "refId": "AVG"
+        }
+      ],
+      "title": "MYAIR SCORE",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The time that the CPAP Device was used.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 7200
+              },
+              {
+                "color": "dark-yellow",
+                "value": 10800
+              },
+              {
+                "color": "dark-blue",
+                "value": 14400
+              },
+              {
+                "color": "dark-purple",
+                "value": 18000
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 21600
+              },
+              {
+                "color": "dark-green",
+                "value": 25200
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_usage_seconds{date=\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "USAGE TIME",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Apnea-Hypopnea Index: It's a measure used to determine the severity of sleep apnea by quantifying how often a person's breathing is disrupted during sleep. Specifically, it counts the number of apneas (complete pauses in breathing) and hypopneas (partial reductions in breathing) per hour. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 7
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-yellow",
+                "value": 13
+              },
+              {
+                "color": "dark-orange",
+                "value": 16
+              },
+              {
+                "color": "dark-red",
+                "value": 19
+              }
+            ]
+          },
+          "unit": "per hour"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 1
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_ahi{date=~\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AHI (SLEEP EVENTS)",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-blue",
+                "value": 25
+              },
+              {
+                "color": "dark-purple",
+                "value": 35
+              },
+              {
+                "color": "dark-orange",
+                "value": 45
+              },
+              {
+                "color": "dark-red",
+                "value": 55
+              }
+            ]
+          },
+          "unit": "flowlpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_mask_seal{date=\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "MASK SEAL",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 3
+              },
+              {
+                "color": "dark-yellow",
+                "value": 4
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 6
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_mask_onoff_count{date=\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "MASK ON/OFF",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 70,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 10.1
+              },
+              {
+                "color": "orange",
+                "value": 20.1
+              },
+              {
+                "color": "light-orange",
+                "value": 30.1
+              },
+              {
+                "color": "dark-yellow",
+                "value": 40.1
+              },
+              {
+                "color": "green",
+                "value": 50.1
+              },
+              {
+                "color": "dark-green",
+                "value": 60.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 5
+      },
+      "id": 5,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_usage_score{date=\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "USAGE TIME SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "AHI Score. Maximum of 5",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "#EAB839",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 5
+      },
+      "id": 3,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_ahi_score{date=\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AHI SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 20\n\nThe better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 20,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 15
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 15,
+        "y": 5
+      },
+      "id": 9,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_mask_seal_score{date=~\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "MASK SEAL SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 5\n\nThe fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "dark-purple",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 4,
+        "x": 20,
+        "y": 5
+      },
+      "id": 7,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_mask_onoff_score{date=\"$lastReportDate\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "MASK ON/OFF SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 38,
+      "panels": [],
+      "title": "HISTORY",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories.\n\nUsage hours, Mask seal, Events per hour, Mask on/off",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 15
+              },
+              {
+                "color": "dark-yellow",
+                "value": 30
+              },
+              {
+                "color": "dark-purple",
+                "value": 45
+              },
+              {
+                "color": "dark-blue",
+                "value": 60
+              },
+              {
+                "color": "semi-dark-blue",
+                "value": 75
+              },
+              {
+                "color": "dark-green",
+                "value": 90
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 8
+      },
+      "id": 29,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "avg(myair_score{patient=~\"$patient\", date=~\"$date\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "AVERAGE",
+          "range": true,
+          "refId": "AVG"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "max(myair_score{patient=~\"$patient\", date=~\"$date\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "hide": false,
+          "legendFormat": "BEST",
+          "range": true,
+          "refId": "MAX"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "min(myair_score{patient=~\"$patient\", date=~\"$date\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "hide": false,
+          "legendFormat": "WORST",
+          "range": true,
+          "refId": "MIN"
+        }
+      ],
+      "title": "MYAIR SCORE",
+      "transparent": true,
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The time that the CPAP Device was used. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 7200
+              },
+              {
+                "color": "dark-yellow",
+                "value": 10800
+              },
+              {
+                "color": "dark-blue",
+                "value": 14400
+              },
+              {
+                "color": "dark-purple",
+                "value": 18000
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 21600
+              },
+              {
+                "color": "dark-green",
+                "value": 25200
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 8
+      },
+      "id": 30,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_usage_seconds{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE USAGE HOURS",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Apnea-Hypopnea Index: It's a measure used to determine the severity of sleep apnea by quantifying how often a person's breathing is disrupted during sleep. Specifically, it counts the number of apneas (complete pauses in breathing) and hypopneas (partial reductions in breathing) per hour. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 7
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-yellow",
+                "value": 13
+              },
+              {
+                "color": "dark-orange",
+                "value": 16
+              },
+              {
+                "color": "dark-red",
+                "value": 19
+              }
+            ]
+          },
+          "unit": "per hour"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 8
+      },
+      "id": 32,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_ahi{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE AHI (SLEEP EVENTS)",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-blue",
+                "value": 25
+              },
+              {
+                "color": "dark-purple",
+                "value": 35
+              },
+              {
+                "color": "dark-orange",
+                "value": 45
+              },
+              {
+                "color": "dark-red",
+                "value": 55
+              }
+            ]
+          },
+          "unit": "flowlpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 8
+      },
+      "id": 34,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_mask_seal{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE MASK SEAL",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 3
+              },
+              {
+                "color": "dark-yellow",
+                "value": 4
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 6
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 8
+      },
+      "id": 36,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_mask_onoff_count{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE MASK ON/OFF",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 70,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 10.1
+              },
+              {
+                "color": "orange",
+                "value": 20.1
+              },
+              {
+                "color": "light-orange",
+                "value": 30.1
+              },
+              {
+                "color": "dark-yellow",
+                "value": 40.1
+              },
+              {
+                "color": "green",
+                "value": 50.1
+              },
+              {
+                "color": "dark-green",
+                "value": 60.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 12
+      },
+      "id": 31,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_usage_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE USAGE HOURS SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "AHI Score. Maximum of 5",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "#EAB839",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 12
+      },
+      "id": 33,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_ahi_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE AHI SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 20\n\nThe better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 20,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 15
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 15,
+        "y": 12
+      },
+      "id": 35,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_mask_seal_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE MASK SEAL SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 5\n\nThe fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "dark-purple",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 4,
+        "x": 20,
+        "y": 12
+      },
+      "id": 37,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg(myair_mask_onoff_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AVERAGE MASK ON/OFF SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The time that the CPAP Device was used. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 14
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_total_usage_seconds{patient=~\"$patient\"}",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "TOTAL USAGE HOURS",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The time that the CPAP Device was used. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 7200
+              },
+              {
+                "color": "dark-yellow",
+                "value": 10800
+              },
+              {
+                "color": "dark-blue",
+                "value": 14400
+              },
+              {
+                "color": "dark-purple",
+                "value": 18000
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 21600
+              },
+              {
+                "color": "dark-green",
+                "value": 25200
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 14
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_usage_seconds{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST USAGE HOURS",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Apnea-Hypopnea Index: It's a measure used to determine the severity of sleep apnea by quantifying how often a person's breathing is disrupted during sleep. Specifically, it counts the number of apneas (complete pauses in breathing) and hypopneas (partial reductions in breathing) per hour. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 7
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-yellow",
+                "value": 13
+              },
+              {
+                "color": "dark-orange",
+                "value": 16
+              },
+              {
+                "color": "dark-red",
+                "value": 19
+              }
+            ]
+          },
+          "unit": "per hour"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 14
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_ahi{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST AHI (SLEEP EVENTS)",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-blue",
+                "value": 25
+              },
+              {
+                "color": "dark-purple",
+                "value": 35
+              },
+              {
+                "color": "dark-orange",
+                "value": 45
+              },
+              {
+                "color": "dark-red",
+                "value": 55
+              }
+            ]
+          },
+          "unit": "flowlpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 14
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_mask_seal{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST  MASK SEAL",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 3
+              },
+              {
+                "color": "dark-yellow",
+                "value": 4
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 6
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 14
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_mask_onoff_count{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST MASK ON/OFF",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 70,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 10.1
+              },
+              {
+                "color": "orange",
+                "value": 20.1
+              },
+              {
+                "color": "light-orange",
+                "value": 30.1
+              },
+              {
+                "color": "dark-yellow",
+                "value": 40.1
+              },
+              {
+                "color": "green",
+                "value": 50.1
+              },
+              {
+                "color": "dark-green",
+                "value": 60.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 18
+      },
+      "id": 21,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_usage_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST USAGE HOURS SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "AHI Score. Maximum of 5",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "#EAB839",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 18
+      },
+      "id": 23,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_ahi_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST AHI SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 20\n\nThe better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 20,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 15
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 15,
+        "y": 18
+      },
+      "id": 25,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_mask_seal_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST MASK SEAL SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 5\n\nThe fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "dark-purple",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 4,
+        "x": 20,
+        "y": 18
+      },
+      "id": 26,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_mask_onoff_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "BEST  MASK ON/OFF SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The number of days that information is being tracked on dashboard.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null+nan",
+                "result": {
+                  "color": "dark-purple",
+                  "index": 0,
+                  "text": "?"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "d"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 20
+      },
+      "id": 20,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "myair_total_days_count{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\",lastReportDate=~\"$lastReportDate\"}",
+          "legendFormat": "TOTAL USAGE DAYS",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "TOTAL USAGE DAYS",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The time that the CPAP Device was used. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 7200
+              },
+              {
+                "color": "dark-yellow",
+                "value": 10800
+              },
+              {
+                "color": "dark-blue",
+                "value": 14400
+              },
+              {
+                "color": "dark-purple",
+                "value": 18000
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 21600
+              },
+              {
+                "color": "dark-green",
+                "value": 25200
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 20
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_usage_seconds{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST USAGE HOURS",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Apnea-Hypopnea Index: It's a measure used to determine the severity of sleep apnea by quantifying how often a person's breathing is disrupted during sleep. Specifically, it counts the number of apneas (complete pauses in breathing) and hypopneas (partial reductions in breathing) per hour. ",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 7
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-yellow",
+                "value": 13
+              },
+              {
+                "color": "dark-orange",
+                "value": 16
+              },
+              {
+                "color": "dark-red",
+                "value": 19
+              }
+            ]
+          },
+          "unit": "per hour"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 10,
+        "y": 20
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_ahi{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST AHI (SLEEP EVENTS)",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-blue",
+                "value": 25
+              },
+              {
+                "color": "dark-purple",
+                "value": 35
+              },
+              {
+                "color": "dark-orange",
+                "value": 45
+              },
+              {
+                "color": "dark-red",
+                "value": 55
+              }
+            ]
+          },
+          "unit": "flowlpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 15,
+        "y": 20
+      },
+      "id": 17,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_mask_seal{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST MASK SEAL",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 3
+              },
+              {
+                "color": "dark-yellow",
+                "value": 4
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-red",
+                "value": 6
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 20
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "max(myair_mask_onoff_count{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST  MASK ON/OFF",
+      "transparent": true,
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points. If more than one date is selected, this is an average.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 70,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 10.1
+              },
+              {
+                "color": "orange",
+                "value": 20.1
+              },
+              {
+                "color": "light-orange",
+                "value": 30.1
+              },
+              {
+                "color": "dark-yellow",
+                "value": 40.1
+              },
+              {
+                "color": "green",
+                "value": 50.1
+              },
+              {
+                "color": "dark-green",
+                "value": 60.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 24
+      },
+      "id": 22,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_usage_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST USAGE HOURS SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "AHI Score. Maximum of 5",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "#EAB839",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 24
+      },
+      "id": 24,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_ahi_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST AHI SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 20\n\nThe better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 20,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 5
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-green",
+                "value": 15
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 15,
+        "y": 24
+      },
+      "id": 27,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_mask_seal_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST MASK SEAL SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Mask Seal Score. Maximum of 5\n\nThe fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 5,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 1.1
+              },
+              {
+                "color": "dark-purple",
+                "value": 2.1
+              },
+              {
+                "color": "dark-blue",
+                "value": 3.1
+              },
+              {
+                "color": "dark-green",
+                "value": 4.1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 4,
+        "x": 20,
+        "y": 24
+      },
+      "id": 28,
+      "options": {
+        "displayMode": "lcd",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(myair_mask_onoff_score{date=~\"$date\", patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"} != 0)",
+          "legendFormat": "{{date}}",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "WORST MASK ON/OFF SCORE",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories.\n\nUsage hours, Mask seal, Events per hour, Mask on/off",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 15
+              },
+              {
+                "color": "dark-yellow",
+                "value": 30
+              },
+              {
+                "color": "dark-purple",
+                "value": 45
+              },
+              {
+                "color": "dark-blue",
+                "value": 60
+              },
+              {
+                "color": "semi-dark-blue",
+                "value": 75
+              },
+              {
+                "color": "dark-green",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 26
+      },
+      "id": 41,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "limit": 5,
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "bottomk($daysBack, sum(myair_score{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"}) by (date))",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "MYAIR SCORE ($daysBack days)",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "dark-red",
+                "value": 0
+              },
+              {
+                "color": "dark-orange",
+                "value": 7200
+              },
+              {
+                "color": "dark-yellow",
+                "value": 10800
+              },
+              {
+                "color": "dark-blue",
+                "value": 14400
+              },
+              {
+                "color": "dark-purple",
+                "value": 18000
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 21600
+              },
+              {
+                "color": "dark-green",
+                "value": 25200
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 26
+      },
+      "id": 42,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "bottomk($daysBack, sum(myair_usage_seconds{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"}) by (date))",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "USAGE TIME ($daysBack days)",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "dark-green",
+                "value": 0
+              },
+              {
+                "color": "dark-purple",
+                "value": 7
+              },
+              {
+                "color": "dark-blue",
+                "value": 10
+              },
+              {
+                "color": "dark-yellow",
+                "value": 13
+              },
+              {
+                "color": "dark-orange",
+                "value": 16
+              },
+              {
+                "color": "dark-red",
+                "value": 19
+              }
+            ]
+          },
+          "unit": "per hour"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 34
+      },
+      "id": 43,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "bottomk($daysBack, sum(myair_ahi{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"}) by (date))",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "AHI ($daysBack days)",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "dark-blue",
+                "value": 25
+              },
+              {
+                "color": "dark-purple",
+                "value": 35
+              },
+              {
+                "color": "dark-orange",
+                "value": 45
+              },
+              {
+                "color": "dark-red",
+                "value": 55
+              }
+            ]
+          },
+          "unit": "flowlpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "id": 40,
+      "options": {
+        "displayMode": "basic",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.2.0-16952534486",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "bottomk($daysBack, sum(myair_mask_seal{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"}) by (date))",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          }
+        }
+      ],
+      "title": "MASK SEAL ($daysBack days)",
+      "transparent": true,
+      "type": "bargauge"
+    }
+  ],
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allowCustomValue": false,
+        "current": {},
+        "definition": "query_result(myair_patient)",
+        "description": "",
+        "includeAll": true,
+        "label": "Patient",
+        "multi": true,
+        "name": "patient",
+        "options": [],
+        "query": {
+          "qryType": 3,
+          "query": "query_result(myair_patient)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/id=\"(?<value>.*?)\".*?name=\"(?<text>.*?)\"/g",
+        "type": "query"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {},
+        "definition": "query_result(myair_device)",
+        "includeAll": true,
+        "label": "Device",
+        "multi": true,
+        "name": "device",
+        "options": [],
+        "query": {
+          "qryType": 3,
+          "query": "query_result(myair_device)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/name=\"(?<text>.*?)\".*?serialNumber=\"(?<value>.*?)\"/g",
+        "type": "query"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {},
+        "definition": "query_result(myair_mask{patient=~\"$patient\"})",
+        "includeAll": true,
+        "label": "Mask",
+        "multi": true,
+        "name": "mask",
+        "options": [],
+        "query": {
+          "qryType": 3,
+          "query": "query_result(myair_mask{patient=~\"$patient\"})",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/code=\"(?<value>.*?)\".*?name=\"(?<text>.*?)\"/g",
+        "type": "query"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {},
+        "definition": "query_result(myair_score{patient=~\"$patient\", mask=~\"$mask\", device=~\"$device\"} != 0)",
+        "includeAll": true,
+        "label": "Date",
+        "multi": true,
+        "name": "date",
+        "options": [],
+        "query": {
+          "qryType": 3,
+          "query": "query_result(myair_score{patient=~\"$patient\", mask=~\"$mask\", device=~\"$device\"} != 0)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/date=\"(?<text>.*?)\"/g",
+        "sort": 6,
+        "type": "query"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {},
+        "definition": "label_values(myair_total_days_count{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"},lastReportDate)",
+        "hide": 2,
+        "name": "lastReportDateOld",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(myair_total_days_count{patient=~\"$patient\", device=~\"$device\", mask=~\"$mask\"},lastReportDate)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "sort": 8,
+        "type": "query"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {},
+        "definition": "query_result(topk(1, myair_total_days_count{patient=~\"$patient\"}))",
+        "hide": 2,
+        "name": "lastReportDate",
+        "options": [],
+        "query": {
+          "qryType": 3,
+          "query": "query_result(topk(1, myair_total_days_count{patient=~\"$patient\"}))",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "regex": "/.*lastReportDate=\"(?<value>[^\"]+).*?/",
+        "sort": 2,
+        "type": "query"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "7",
+          "value": "7"
+        },
+        "label": "Show Days",
+        "name": "daysBack",
+        "options": [
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "2",
+            "value": "2"
+          },
+          {
+            "selected": false,
+            "text": "3",
+            "value": "3"
+          },
+          {
+            "selected": false,
+            "text": "4",
+            "value": "4"
+          },
+          {
+            "selected": false,
+            "text": "5",
+            "value": "5"
+          },
+          {
+            "selected": false,
+            "text": "6",
+            "value": "6"
+          },
+          {
+            "selected": true,
+            "text": "7",
+            "value": "7"
+          },
+          {
+            "selected": false,
+            "text": "8",
+            "value": "8"
+          },
+          {
+            "selected": false,
+            "text": "9",
+            "value": "9"
+          },
+          {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "11",
+            "value": "11"
+          },
+          {
+            "selected": false,
+            "text": "12",
+            "value": "12"
+          },
+          {
+            "selected": false,
+            "text": "13",
+            "value": "13"
+          },
+          {
+            "selected": false,
+            "text": "14",
+            "value": "14"
+          }
+        ],
+        "query": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "America/Chicago",
+  "title": "MyAir",
+  "uid": "a93a5fb1-2c8e-4105-b44f-cd658c13ee65",
+  "version": 47,
+  "weekStart": ""
+}
