@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import inspect
 import math
 import os
@@ -54,7 +55,7 @@ class MyAirMetrics:
             namespace=self.namespace,
             name="device",
             documentation="A reference metric for the device to be used in other metrics",
-            labelnames=["serialNumber", "manufacturer", "type", "name", "image"],
+            labelnames=["serialNumber", "manufacturer", "type", "name", "image", "lastReportDate", "patient"],
         )
 
         self.mask = Gauge(
@@ -127,6 +128,20 @@ class MyAirMetrics:
             labelnames=["patient", "device", "date", "mask"],
         )
 
+        self.total_days_count = Gauge(
+            namespace=self.namespace,
+            name="total_days_count",
+            documentation="Total number of days the user has been using any device.",
+            labelnames=["patient", "device", "mask", "lastReportDate"],
+        )
+
+        self.total_usage_seconds = Gauge(
+            namespace=self.namespace,
+            name="total_usage_seconds",
+            documentation="Total usage time of any device in seconds.",
+            labelnames=["patient"],
+        )
+
         self.log.debug(f"{self._module}.{self._class}.{_method}", "Metrics initialized")
 
     async def run_metrics_loop(self):
@@ -176,36 +191,15 @@ class MyAirMetrics:
 
             self.patient_db.insert(user_info)
             self.device_db.insert(user_device_data)
-
-            self.patient.labels(
-                id=user_info.id,
-                name=f"{user_info.firstName} {user_info.lastName[:1]}",
-                ahi=user_info.userEnteredAhi or 0,
-            ).set(1)
-
-            devices = self.device_db.list() or []
-            for device in devices:
-                active = device.serialNumber == user_device_data.serialNumber
-                self.device.labels(
-                    serialNumber=device.serialNumber,
-                    manufacturer=device.fgDeviceManufacturerName,
-                    type=device.deviceType,
-                    name=device.localizedName,
-                    image=device.imagePath,
-                ).set(1 if active else 0)
-
             self.masks_db.insert(mask_info)
-            masks = self.masks_db.list() or []
 
-            for mask in masks:
-                active = mask.maskCode == mask_info.maskCode
-                self.mask.labels(
-                    patient=mask.maskPatientId,
-                    code=mask.maskCode,
-                    name=mask.localizedName,
-                    type=mask.maskType,
-                    image=mask.imagePath,
-                ).set(1 if active else 0)
+            lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
+
+            if lastReportDate is None:
+                yesterday: datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
+                lastReportDate = yesterday.strftime("%Y-%m-%d")
+
+            includeZero = self.config.settings.myair["include_zero_scores"]
 
             if sleep_records is not None and len(sleep_records) > 0:
                 for record in sleep_records:
@@ -222,6 +216,9 @@ class MyAirMetrics:
                     record.maskCode = entry_mask.maskCode
 
                     self.sleep_records_db.insert(record)
+
+                    if not includeZero and record.sleepScore == 0:
+                        continue
 
                     self.score.labels(
                         patient=record.sleepRecordPatientId,
@@ -287,3 +284,55 @@ class MyAirMetrics:
                         date=record.startDate,
                         mask=record.maskCode,
                     ).set(record.ahiScore)
+
+            self.patient.labels(
+                id=user_info.id,
+                name=f"{user_info.firstName} {user_info.lastName[:1]}",
+                ahi=user_info.userEnteredAhi or 0,
+            ).set(1)
+
+            devices = self.device_db.list() or []
+            for device in devices:
+                active = device.serialNumber == user_device_data.serialNumber
+
+                deviceLastReportDate = (
+                    datetime.datetime.fromisoformat(device.lastSleepDataReportTime).strftime("%Y-%m-%d")
+                    if device.lastSleepDataReportTime
+                    else None
+                )
+
+                self.device.labels(
+                    serialNumber=device.serialNumber,
+                    manufacturer=device.fgDeviceManufacturerName,
+                    type=device.deviceType,
+                    name=device.localizedName,
+                    image=device.imagePath,
+                    lastReportDate=lastReportDate if active else deviceLastReportDate,
+                    patient=device.fgDevicePatientId,
+                ).set(1 if active else 0)
+
+            usageSeconds = self.sleep_records_db.getTotalUsageSeconds(patientId=device.fgDevicePatientId)
+            self.total_usage_seconds.clear()
+            usageSeconds = self.sleep_records_db.getTotalUsageSeconds(patientId=user_device_data.fgDevicePatientId)
+            self.total_usage_seconds.clear()
+            self.total_usage_seconds.labels(patient=user_device_data.fgDevicePatientId).set(usageSeconds)
+
+            masks = self.masks_db.list() or []
+            for mask in masks:
+                active = mask.maskCode == mask_info.maskCode
+                self.mask.labels(
+                    patient=mask.maskPatientId,
+                    code=mask.maskCode,
+                    name=mask.localizedName,
+                    type=mask.maskType,
+                    image=mask.imagePath,
+                ).set(1 if active else 0)
+
+            totalDays = self.sleep_records_db.getTotalDaysCount(user_info.id, includeZero=includeZero)
+            self.total_days_count.clear()
+            self.total_days_count.labels(
+                patient=user_info.id,
+                device=user_device_data.serialNumber,
+                mask=mask_info.maskCode,
+                lastReportDate=lastReportDate,
+            ).set(totalDays)
