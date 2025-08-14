@@ -3502,7 +3502,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "description": "The time that the CPAP Device was used.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3600,7 +3600,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+      "description": "Apnea-Hypopnea Index: It's a measure used to determine the severity of sleep apnea by quantifying how often a person's breathing is disrupted during sleep. Specifically, it counts the number of apneas (complete pauses in breathing) and hypopneas (partial reductions in breathing) per hour. ",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3989,6 +3989,6 @@
   "timezone": "America/Chicago",
   "title": "MyAir",
   "uid": "a93a5fb1-2c8e-4105-b44f-cd658c13ee65",
-  "version": 47,
+  "version": 48,
   "weekStart": ""
 }
