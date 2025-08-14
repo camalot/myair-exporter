@@ -38,7 +38,10 @@ def run_exporter_sync():
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
+    # Explicitly create and set the event loop to avoid DeprecationWarning
+    # in Python 3.10+ when no current event loop exists in this thread.
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     try:
         signal.signal(signal.SIGTERM, sighandler)
         signal.signal(signal.SIGINT, sighandler)
