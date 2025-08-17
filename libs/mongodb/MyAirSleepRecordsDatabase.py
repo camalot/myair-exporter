@@ -90,7 +90,7 @@ class MyAirSleepRecordsDatabase(Database):
             )
             return None
 
-    def list(self) -> list[SleepRecord]:
+    def list(self) -> typing.List[SleepRecord]:
         """Get all sleep records."""
         _method = inspect.stack()[0][3]
         try:
@@ -100,6 +100,26 @@ class MyAirSleepRecordsDatabase(Database):
                 return []
             # get the sleep records from the collection and return them as a list of models.SleepRecord
             records = self.connection[self.collection_name].find({})  # type: ignore
+            return [SleepRecord.from_dict(record) for record in records]
+        except Exception as ex:
+            self.log(
+                level=loglevel.LogLevel.ERROR,
+                method=f"{self._module}.{self._class}.{_method}",
+                message=f"{ex}",
+                stackTrace=traceback.format_exc(),
+            )
+            return []
+
+    def getForLastReportDate(self, date: str) -> typing.List[SleepRecord]:
+        """Get sleep records for the last report date."""
+        _method = inspect.stack()[0][3]
+        try:
+            if self.connection is None or self.client is None:
+                self.open()
+            if self.collection_name not in self.connection.list_collection_names():  # type: ignore
+                return []
+            # get the sleep records from the collection and return them as a list of models.SleepRecord
+            records = self.connection[self.collection_name].find({"startDate": date})  # type: ignore
             return [SleepRecord.from_dict(record) for record in records]
         except Exception as ex:
             self.log(
