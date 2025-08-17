@@ -193,12 +193,6 @@ class MyAirMetrics:
             self.device_db.insert(user_device_data)
             self.masks_db.insert(mask_info)
 
-            lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
-
-            if lastReportDate is None:
-                yesterday: datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
-                lastReportDate = yesterday.strftime("%Y-%m-%d")
-
             includeZero = self.config.settings.myair["include_zero_scores"]
 
             if sleep_records is not None and len(sleep_records) > 0:
@@ -284,6 +278,12 @@ class MyAirMetrics:
                         date=record.startDate,
                         mask=record.maskCode,
                     ).set(record.ahiScore)
+
+            lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
+
+            if lastReportDate is None:
+                yesterday: datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
+                lastReportDate = yesterday.strftime("%Y-%m-%d")
 
             self.patient.labels(
                 id=user_info.id,
