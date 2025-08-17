@@ -23,7 +23,7 @@ class MyAirMetricsConfig:
 
         # set defaults for config from environment variables if they exist
         self.metrics = {
-            "port": int(utils.dict_get(os.environ, "MAE_CONFIG_METRICS_PORT", "8933")),
+            "port": 8933,
             "pollingInterval": int(utils.dict_get(os.environ, "MAE_CONFIG_METRICS_POLLING_INTERVAL", "60")),
         }
 

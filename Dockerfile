@@ -26,4 +26,9 @@ VOLUME ["/data"]
 VOLUME ["/config"]
 WORKDIR /app
 
+EXPOSE 8933
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl --fail http://localhost:8933/metrics || exit 1
+
 CMD ["python", "-u", "/app/main.py"]
