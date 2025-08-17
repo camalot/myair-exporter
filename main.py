@@ -7,8 +7,8 @@ from dotenv import find_dotenv, load_dotenv
 from libs.colors import Colors
 from metrics.exporter import MetricsExporter
 
-
 load_dotenv(find_dotenv())
+
 
 def sighandler(signum: int, frame):
     match signum:
@@ -77,6 +77,7 @@ if __name__ == '__main__':
         loop.close()
         try:
             from libs.mongodb.MongoClientSingleton import MongoClientSingleton
+
             MongoClientSingleton().close_client()
         except ImportError:
             pass
