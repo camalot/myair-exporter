@@ -221,17 +221,17 @@ class MyAirMetrics:
                 lastReportDate = yesterday.strftime("%Y-%m-%d")
 
             records = self.sleep_records_db.getForLastReportDate(lastReportDate)
-            # we clear the previous metrics so that only the current report date is considered
-            if not records is None and len(records) > 0:
-                self.score.clear()
-                self.usage.clear()
-                self.usage_score.clear()
-                self.mask_seal.clear()
-                self.mask_seal_score.clear()
-                self.mask_onoff_count.clear()
-                self.mask_onoff_score.clear()
-                self.ahi.clear()
-                self.ahi_score.clear()
+            # # we clear the previous metrics so that only the current report date is considered
+            # if not records is None and len(records) > 0:
+            #     self.score.clear()
+            #     self.usage.clear()
+            #     self.usage_score.clear()
+            #     self.mask_seal.clear()
+            #     self.mask_seal_score.clear()
+            #     self.mask_onoff_count.clear()
+            #     self.mask_onoff_score.clear()
+            #     self.ahi.clear()
+            #     self.ahi_score.clear()
 
             for record in records:
                 self.score.labels(
