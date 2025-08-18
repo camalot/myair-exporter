@@ -214,90 +214,76 @@ class MyAirMetrics:
                     if not includeZero and record.sleepScore == 0:
                         continue
 
+                    self.score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.sleepScore)
+
+                    self.usage.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(
+                        record.totalUsage * 60
+                    )  # totalUsage is in minutes, convert to seconds
+
+                    self.usage_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.usageScore)
+
+                    self.mask_seal.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.leakPercentile)
+
+                    self.mask_seal_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.leakScore)
+
+                    self.mask_onoff_count.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.maskPairCount)
+
+                    self.mask_onoff_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.maskScore)
+
+                    self.ahi.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.ahi)
+
+                    self.ahi_score.labels(
+                        patient=record.sleepRecordPatientId,
+                        device=user_device_data.serialNumber,
+                        date=record.startDate,
+                        mask=record.maskCode,
+                    ).set(record.ahiScore)
+
             lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
 
             if lastReportDate is None:
                 yesterday: datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
                 lastReportDate = yesterday.strftime("%Y-%m-%d")
-
-            records = self.sleep_records_db.getForLastReportDate(lastReportDate)
-            # # we clear the previous metrics so that only the current report date is considered
-            # if not records is None and len(records) > 0:
-            #     self.score.clear()
-            #     self.usage.clear()
-            #     self.usage_score.clear()
-            #     self.mask_seal.clear()
-            #     self.mask_seal_score.clear()
-            #     self.mask_onoff_count.clear()
-            #     self.mask_onoff_score.clear()
-            #     self.ahi.clear()
-            #     self.ahi_score.clear()
-
-            for record in records:
-                self.score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.sleepScore)
-
-                self.usage.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(
-                    record.totalUsage * 60
-                )  # totalUsage is in minutes, convert to seconds
-
-                self.usage_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.usageScore)
-
-                self.mask_seal.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.leakPercentile)
-
-                self.mask_seal_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.leakScore)
-
-                self.mask_onoff_count.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.maskPairCount)
-
-                self.mask_onoff_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.maskScore)
-
-                self.ahi.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.ahi)
-
-                self.ahi_score.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    date=record.startDate,
-                    mask=record.maskCode,
-                ).set(record.ahiScore)
 
             self.patient.labels(
                 id=user_info.id,
