@@ -44,7 +44,6 @@ class MyAirMetrics:
         self.patient_db = MyAirPatientsDatabase()
         self.device_db = MyAirDevicesDatabase()
 
-
         self.score_max = Gauge(
             namespace=self.namespace,
             name="score_max",
