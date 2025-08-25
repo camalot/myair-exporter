@@ -44,6 +44,47 @@ class MyAirMetrics:
         self.patient_db = MyAirPatientsDatabase()
         self.device_db = MyAirDevicesDatabase()
 
+
+        self.score_max = Gauge(
+            namespace=self.namespace,
+            name="score_max",
+            documentation="The maximum score a patient can achieve.",
+            labelnames=[],
+        )
+        self.score_max.set(100)
+
+        self.usage_score_max = Gauge(
+            namespace=self.namespace,
+            name="usage_score_max",
+            documentation="The maximum usage score a patient can achieve.",
+            labelnames=[],
+        )
+        self.usage_score_max.set(70)
+
+        self.mask_seal_score_max = Gauge(
+            namespace=self.namespace,
+            name="mask_seal_score_max",
+            documentation="The maximum mask seal score a patient can achieve.",
+            labelnames=[],
+        )
+        self.mask_seal_score_max.set(20)
+
+        self.mask_onoff_score_max = Gauge(
+            namespace=self.namespace,
+            name="mask_onoff_score_max",
+            documentation="The maximum mask on/off score a patient can achieve.",
+            labelnames=[],
+        )
+        self.mask_onoff_score_max.set(5)
+
+        self.ahi_score_max = Gauge(
+            namespace=self.namespace,
+            name="ahi_score_max",
+            documentation="The maximum AHI score a patient can achieve.",
+            labelnames=[],
+        )
+        self.ahi_score_max.set(5)
+
         self.patient = Gauge(
             namespace=self.namespace,
             name="patient",

@@ -32,6 +32,48 @@ Exports data from MyAir for consumption by prometheus
 
 <!-- markdownlint-disable -->
 ``` text
+# HELP myair_score_max The maximum score a patient can achieve.
+# TYPE myair_score_max gauge
+myair_score_max 100.0
+# HELP myair_usage_score_max The maximum usage score a patient can achieve.
+# TYPE myair_usage_score_max gauge
+myair_usage_score_max 70.0
+# HELP myair_mask_seal_score_max The maximum mask seal score a patient can achieve.
+# TYPE myair_mask_seal_score_max gauge
+myair_mask_seal_score_max 20.0
+# HELP myair_mask_onoff_score_max The maximum mask on/off score a patient can achieve.
+# TYPE myair_mask_onoff_score_max gauge
+myair_mask_onoff_score_max 5.0
+# HELP myair_ahi_score_max The maximum AHI score a patient can achieve.
+# TYPE myair_ahi_score_max gauge
+myair_ahi_score_max 5.0
+# HELP myair_score_current myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories: usage, mask seal, events, and mask on/off. The maximum score you can get is 100 points.
+# TYPE myair_score_current gauge
+myair_score_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 100.0
+# HELP myair_usage_current The MyAir usage time in seconds
+# TYPE myair_usage_current gauge
+myair_usage_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 30360.0
+# HELP myair_usage_score_current The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points.
+# TYPE myair_usage_score_current gauge
+myair_usage_score_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 70.0
+# HELP myair_mask_seal_current The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.
+# TYPE myair_mask_seal_current gauge
+myair_mask_seal_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 13.2
+# HELP myair_mask_seal_score_current Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.
+# TYPE myair_mask_seal_score_current gauge
+myair_mask_seal_score_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 20.0
+# HELP myair_mask_onoff_count_current The MyAir mask on/off status. The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.
+# TYPE myair_mask_onoff_count_current gauge
+myair_mask_onoff_count_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 2.0
+# HELP myair_mask_onoff_score_current The MyAir mask on/off score. The fewer times you take your mask on and off throughout the night, the more points you get. 1-2: 5 points, 3: 4 points, 4: 3 points, 5: 2 points, 6 or more: 0 points.
+# TYPE myair_mask_onoff_score_current gauge
+myair_mask_onoff_score_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 5.0
+# HELP myair_ahi_current Your CPAP machine notes the number of breathing events you have in each hour. This number can help measure how well your treatment is working. When you have an apnea, air stops flowing to your lungs for 10 seconds or longer -- that is, you actually stop breathing.
+# TYPE myair_ahi_current gauge
+myair_ahi_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 3.9
+# HELP myair_ahi_score_current The fewer breathing events you have each hour, the more points you get. These breathing events are also known as the apnea-hypopnea index (or AHI). myAir measures how many times your breathing partially or fully stops each hour. If you have minimal events, you get 4 to 5 points.
+# TYPE myair_ahi_score_current gauge
+myair_ahi_score_current{device="11111111111",mask="fake-mask-code",patient="00000000000000000000"} 5.0
 # HELP myair_patient A reference metric for the patient to be used in other metrics
 # TYPE myair_patient gauge
 myair_patient{ahi="120.0",id="00000000000000000000",name="John D"} 1.0
