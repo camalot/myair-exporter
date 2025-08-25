@@ -355,7 +355,6 @@ class MyAirMetrics:
 
             lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
 
-
             if lastReportDate is None:
                 yesterday: datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
                 lastReportDate = yesterday.strftime("%Y-%m-%d")
@@ -367,59 +366,41 @@ class MyAirMetrics:
                     continue
 
                 self.score_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.sleepScore)
 
                 self.usage_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(
                     record.totalUsage * 60
                 )
 
                 self.usage_score_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.usageScore)
 
                 self.mask_seal_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.leakPercentile)
 
                 self.mask_seal_score_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.leakScore)
 
                 self.mask_onoff_count_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.maskPairCount)
 
                 self.mask_onoff_score_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.maskScore)
 
                 self.ahi_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.ahi)
 
                 self.ahi_score_current.labels(
-                    patient=record.sleepRecordPatientId,
-                    device=user_device_data.serialNumber,
-                    mask=record.maskCode,
+                    patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
                 ).set(record.ahiScore)
 
             self.patient.labels(

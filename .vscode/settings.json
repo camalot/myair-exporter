@@ -8,13 +8,17 @@
     "jdata",
     "labelnames",
     "myair",
+    "MYPY",
     "OKGREEN",
     "onoff",
+    "PYINK",
+    "PYLINT",
     "regionalized",
     "sighandler",
     "signum",
     "stdoe",
     "userinfo",
-    "varnames"
+    "varnames",
+    "ZIZMOR"
   ]
 }
