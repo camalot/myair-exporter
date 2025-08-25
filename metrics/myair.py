@@ -72,11 +72,25 @@ class MyAirMetrics:
             labelnames=["patient", "device", "date", "mask"],
         )
 
+        self.score_current = Gauge(
+            namespace=self.namespace,
+            name="score_current",
+            documentation="myAir calculates your score by analyzing your nightly therapy data. The higher your score, the better. You get points based on the following four key categories: usage, mask seal, events, and mask on/off. The maximum score you can get is 100 points.",
+            labelnames=["patient", "device", "mask"],
+        )
+
         self.usage = Gauge(
             namespace=self.namespace,
             name="usage_seconds",
             documentation="The MyAir usage time in seconds",
             labelnames=["patient", "device", "date", "mask"],
+        )
+
+        self.usage_current = Gauge(
+            namespace=self.namespace,
+            name="usage_current",
+            documentation="The MyAir usage time in seconds",
+            labelnames=["patient", "device", "mask"],
         )
 
         self.usage_score = Gauge(
@@ -86,11 +100,25 @@ class MyAirMetrics:
             labelnames=["patient", "device", "date", "mask"],
         )
 
+        self.usage_score_current = Gauge(
+            namespace=self.namespace,
+            name="usage_score_current",
+            documentation="The point system for usage is calculated in hours and minutes. If you use your therapy for 1 hour you get 10 points, or for 2.3 hours (2 hours, 18 minutes) you get 23 points. The more time you use your therapy, the more points you receive, up to a maximum of 70 points.",
+            labelnames=["patient", "device", "mask"],
+        )
+
         self.mask_seal = Gauge(
             namespace=self.namespace,
             name="mask_seal",
             documentation="The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
             labelnames=["patient", "device", "date", "mask"],
+        )
+
+        self.mask_seal_current = Gauge(
+            namespace=self.namespace,
+            name="mask_seal_current",
+            documentation="The better your mask seal, the more points you get. This category can help you know if you need to adjust or change your mask to get a better fit. If your mask seal is poor, it can affect your comfort and the quality of your treatment. Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+            labelnames=["patient", "device", "mask"],
         )
 
         self.mask_seal_score = Gauge(
@@ -100,11 +128,25 @@ class MyAirMetrics:
             labelnames=["patient", "device", "date", "mask"],
         )
 
+        self.mask_seal_score_current = Gauge(
+            namespace=self.namespace,
+            name="mask_seal_score_current",
+            documentation="Your score reduces as your mask leak increases. You can get up to 20 points for minimal mask leak, 10 to 15 points for moderate leak, and 0 to 10 points for higher leak.",
+            labelnames=["patient", "device", "mask"],
+        )
+
         self.mask_onoff_count = Gauge(
             namespace=self.namespace,
             name="mask_onoff_count",
             documentation="The MyAir mask on/off status. The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
             labelnames=["patient", "device", "date", "mask"],
+        )
+
+        self.mask_onoff_count_current = Gauge(
+            namespace=self.namespace,
+            name="mask_onoff_count_current",
+            documentation="The MyAir mask on/off status. The fewer times you take your mask on and off throughout the night, the more points you get. Everyone has to take their mask on and off one time during treatment. So, for example, if you remove your mask one or two times, you get 5 points. However, if you take your mask on and off several times, it can indicate a problem with mask fit or with your sleep in general.",
+            labelnames=["patient", "device", "mask"],
         )
 
         self.mask_onoff_score = Gauge(
@@ -114,6 +156,13 @@ class MyAirMetrics:
             labelnames=["patient", "device", "date", "mask"],
         )
 
+        self.mask_onoff_score_current = Gauge(
+            namespace=self.namespace,
+            name="mask_onoff_score_current",
+            documentation="The MyAir mask on/off score. The fewer times you take your mask on and off throughout the night, the more points you get. 1-2: 5 points, 3: 4 points, 4: 3 points, 5: 2 points, 6 or more: 0 points.",
+            labelnames=["patient", "device", "mask"],
+        )
+
         self.ahi = Gauge(
             namespace=self.namespace,
             name="ahi",
@@ -121,11 +170,25 @@ class MyAirMetrics:
             labelnames=["patient", "device", "date", "mask"],
         )
 
+        self.ahi_current = Gauge(
+            namespace=self.namespace,
+            name="ahi_current",
+            documentation="Your CPAP machine notes the number of breathing events you have in each hour. This number can help measure how well your treatment is working. When you have an apnea, air stops flowing to your lungs for 10 seconds or longer -- that is, you actually stop breathing.",
+            labelnames=["patient", "device", "mask"],
+        )
+
         self.ahi_score = Gauge(
             namespace=self.namespace,
             name="ahi_score",
             documentation="The fewer breathing events you have each hour, the more points you get. These breathing events are also known as the apnea-hypopnea index (or AHI). myAir measures how many times your breathing partially or fully stops each hour. If you have minimal events, you get 4 to 5 points.",
             labelnames=["patient", "device", "date", "mask"],
+        )
+
+        self.ahi_score_current = Gauge(
+            namespace=self.namespace,
+            name="ahi_score_current",
+            documentation="The fewer breathing events you have each hour, the more points you get. These breathing events are also known as the apnea-hypopnea index (or AHI). myAir measures how many times your breathing partially or fully stops each hour. If you have minimal events, you get 4 to 5 points.",
+            labelnames=["patient", "device", "mask"],
         )
 
         self.total_days_count = Gauge(
@@ -161,6 +224,17 @@ class MyAirMetrics:
 
     def _create_clientsession(self, **kwargs):
         return aiohttp.ClientSession(**kwargs)
+
+    def clear_current_metrics(self):
+        self.score_current.clear()
+        self.ahi_current.clear()
+        self.ahi_score_current.clear()
+        self.usage_current.clear()
+        self.usage_score_current.clear()
+        self.mask_seal_current.clear()
+        self.mask_seal_score_current.clear()
+        self.mask_onoff_count_current.clear()
+        self.mask_onoff_score_current.clear()
 
     async def fetch(self):
         # _method = inspect.stack ()[0][3]
@@ -281,9 +355,72 @@ class MyAirMetrics:
 
             lastReportDate = self.sleep_records_db.getLastReportDate(user_info.id)
 
+
             if lastReportDate is None:
                 yesterday: datetime.datetime = datetime.datetime.now() - datetime.timedelta(days=1)
                 lastReportDate = yesterday.strftime("%Y-%m-%d")
+
+            current_records = self.sleep_records_db.getForLastReportDate(lastReportDate)
+            self.clear_current_metrics()
+            for record in current_records:
+                if not includeZero and record.sleepScore == 0:
+                    continue
+
+                self.score_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.sleepScore)
+
+                self.usage_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(
+                    record.totalUsage * 60
+                )
+
+                self.usage_score_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.usageScore)
+
+                self.mask_seal_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.leakPercentile)
+
+                self.mask_seal_score_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.leakScore)
+
+                self.mask_onoff_count_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.maskPairCount)
+
+                self.mask_onoff_score_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.maskScore)
+
+                self.ahi_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.ahi)
+
+                self.ahi_score_current.labels(
+                    patient=record.sleepRecordPatientId,
+                    device=user_device_data.serialNumber,
+                    mask=record.maskCode,
+                ).set(record.ahiScore)
 
             self.patient.labels(
                 id=user_info.id,
