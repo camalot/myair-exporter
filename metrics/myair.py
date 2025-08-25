@@ -371,9 +371,7 @@ class MyAirMetrics:
 
                 self.usage_current.labels(
                     patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
-                ).set(
-                    record.totalUsage * 60
-                )
+                ).set(record.totalUsage * 60)
 
                 self.usage_score_current.labels(
                     patient=record.sleepRecordPatientId, device=user_device_data.serialNumber, mask=record.maskCode
