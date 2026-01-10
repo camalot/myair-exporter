@@ -256,18 +256,25 @@ class RESTClient(MyAirClient):
     ) -> None:
         if "errors" in resp_dict:
             try:
-                error_message: str = (
-                    f"{resp_dict['errors'][0]['errorInfo']['errorType']}: {resp_dict['errors'][0]['errorInfo']['errorCode']}"
-                )
-                if resp_dict["errors"][0]["errorInfo"]["errorType"] == "unauthorized":
-                    if step == "gql_query" and not initial:
-                        raise ParsingError(f"Getting unauthorized error on {step} step. {error_message}")
-                    raise AuthenticationError(f"Getting unauthorized error on {step} step. {error_message}")
-                if resp_dict["errors"][0]["errorInfo"]["errorType"] == "badRequest" and resp_dict["errors"][0][
-                    "errorInfo"
-                ]["errorCode"] in {"onboardingFlowInProgress", "equipmentNotAssigned"}:
-                    raise IncompleteAccountError(f"{error_message}")
-            except TypeError:
+                first_error = resp_dict["errors"][0]
+                if "errorInfo" in first_error:
+                    error_type = first_error["errorInfo"].get("errorType")
+                    error_code = first_error["errorInfo"].get("errorCode")
+                    error_message: str = f"{error_type}: {error_code}"
+
+                    if error_type == "unauthorized":
+                        if step == "gql_query" and not initial:
+                            raise ParsingError(f"Getting unauthorized error on {step} step. {error_message}")
+                        raise AuthenticationError(f"Getting unauthorized error on {step} step. {error_message}")
+                    if error_type == "badRequest" and error_code in {
+                        "onboardingFlowInProgress",
+                        "equipmentNotAssigned",
+                    }:
+                        raise IncompleteAccountError(f"{error_message}")
+                else:
+                    error_message = first_error.get("message", str(first_error))
+
+            except (TypeError, KeyError, IndexError):
                 error_message = "Error"
             raise HttpProcessingError(
                 code=response.status,
@@ -645,7 +652,31 @@ class RESTClient(MyAirClient):
         """
 
         _LOGGER.info("Getting User Device Data")
-        records_dict: MutableMapping[str, Any] = await self._gql_query("getPatientWrapper", query, initial)
+        try:
+            records_dict: MutableMapping[str, Any] = await self._gql_query("getPatientWrapper", query, initial)
+        except HttpProcessingError as ex:
+            if "Cannot return null for non-nullable type: 'FgDeviceType'" in str(ex):
+                _LOGGER.warning(
+                    "Getting User Device Data failed because deviceType is null. Retrying without deviceType."
+                )
+                query = """
+        query getPatientWrapper {
+            getPatientWrapper {
+                fgDevices {
+                    serialNumber
+                    lastSleepDataReportTime
+                    localizedName
+                    imagePath
+                    fgDeviceManufacturerName
+                    fgDevicePatientId
+                    __typename
+                }
+            }
+        }
+        """
+                records_dict = await self._gql_query("getPatientWrapper", query, initial)
+            else:
+                raise
         _LOGGER.debug("[get_user_device_data] records_dict: %s", redact_dict(records_dict))
         try:
             device: Mapping[str, Any] = records_dict["data"]["getPatientWrapper"]["fgDevices"][0]
