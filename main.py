@@ -21,7 +21,7 @@ def sighandler(signum: int, frame):
     loop.call_soon_threadsafe(loop.stop)
 
 
-async def exporter():
+async def exporter() -> None:
     try:
         EXPORTER_ENABLED = os.environ.get("MAE_CONFIG_METRICS_ENABLED", "false").lower() == "true"
         if EXPORTER_ENABLED:

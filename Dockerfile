@@ -11,11 +11,17 @@ LABEL VERSION="${BUILD_VERSION}"
 LABEL BRANCH="${BRANCH}"
 LABEL PROJECT_NAME="${PROJECT_NAME}"
 
+# Create and activate virtual environment
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+WORKDIR /app
 COPY ./ /app/
 RUN \
   apk update && \
   apk add --no-cache git curl build-base tcl tk && \
-  mkdir -p /app /data && \
+  mkdir -p /data && \
   pip install --no-cache-dir --upgrade pip && \
   pip install --no-cache-dir . && \
   sed -i "s/APP_VERSION = \"1.0.0-snapshot\"/APP_VERSION = \"${APP_VERSION}\"/g" "/app/libs/settings.py" && \
@@ -23,7 +29,6 @@ RUN \
 
 VOLUME ["/data"]
 VOLUME ["/config"]
-WORKDIR /app
 
 EXPOSE 8933
 

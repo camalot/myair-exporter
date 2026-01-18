@@ -8,7 +8,7 @@ dependencies = [
     "validators~=0.35",
     "python-dotenv~=1.2",
     "requests~=2.32",
-    "pytz~=2025",
+    "pytz",
     "aiohttp~=3.13",
     "prometheus_client~=0.24",
     "pyyaml~=6.0",
