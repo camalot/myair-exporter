@@ -6,24 +6,24 @@ Exports data from MyAir for consumption by prometheus
 
 ## ENVIRONMENT VARIABLES
 
-| NAME                          | DESCRIPTION                                                                                                   | DEFAULT      |
-|-------------------------------|---------------------------------------------------------------------------------------------------------------|--------------|
-| MAE_CONFIG_METRICS_ENABLED     | Enable or disable Prometheus metrics exporter                                                                 | true         |
-| MAE_LOG_LEVEL                  | Logging level (e.g., DEBUG, INFO, WARNING, ERROR)                                                            | WARNING      |
-| MAE_CONFIG_METRICS_PORT        | Port for Prometheus metrics endpoint                                                                          | 8933         |
-| MAE_CONFIG_METRICS_POLLING_INTERVAL | Polling interval in seconds for metrics collection                                                    | 90           |
-| MAE_MONGODB_USERNAME           | MongoDB username                                                                                             | mongouser    |
-| MAE_MONGODB_PASSWORD           | MongoDB password                                                                                             | (required)   |
-| MAE_MONGODB_HOST               | MongoDB host address                                                                                         | 127.0.0.1    |
-| MAE_MONGODB_PORT               | MongoDB port                                                                                                 | 27017        |
-| MAE_MONGODB_AUTHSOURCE         | MongoDB authentication database                                                                              | admin        |
-| MAE_MONGODB_DATABASE           | MongoDB database name                                                                                        | myair        |
-| MAE_MYAIR_RECORDS_DAYS         | Number of days of MyAir records to fetch                                                                     | 90           |
-| MAE_MYAIR_INCLUDE_ZERO_SCORES  | Include records with zero scores ("TRUE" or "FALSE")                                                         | FALSE        |
-| MAE_MYAIR_USERNAME_N           | MyAir account username                                                                                       | (required)   |
-| MAE_MYAIR_PASSWORD_N           | MyAir account password                                                                                       | (required)   |
-| MAE_MYAIR_DEVICE_TOKEN_N       | MyAir device token (optional, usually not required)                                                          | (empty)      |
-| MAE_MYAIR_REGION_N             | MyAir region (e.g., NA, EU)                                                                             | NA           |
+| NAME                                | DESCRIPTION                                                                                                   | DEFAULT      |
+|-------------------------------------|---------------------------------------------------------------------------------------------------------------|--------------|
+| MAE_CONFIG_METRICS_ENABLED          | Enable or disable Prometheus metrics exporter                                                                 | true         |
+| MAE_LOG_LEVEL                       | Logging level (e.g., DEBUG, INFO, WARNING, ERROR)                                                             | WARNING      |
+| MAE_CONFIG_METRICS_PORT             | Port for Prometheus metrics endpoint                                                                          | 8933         |
+| MAE_CONFIG_METRICS_POLLING_INTERVAL | Polling interval in seconds for metrics collection                                                            | 90           |
+| MAE_MONGODB_USERNAME                | MongoDB username                                                                                              | mongouser    |
+| MAE_MONGODB_PASSWORD                | MongoDB password                                                                                              | (required)   |
+| MAE_MONGODB_HOST                    | MongoDB host address                                                                                          | 127.0.0.1    |
+| MAE_MONGODB_PORT                    | MongoDB port                                                                                                  | 27017        |
+| MAE_MONGODB_AUTHSOURCE              | MongoDB authentication database                                                                               | admin        |
+| MAE_MONGODB_DATABASE                | MongoDB database name                                                                                         | myair        |
+| MAE_MYAIR_RECORDS_DAYS              | Number of days of MyAir records to fetch                                                                      | 90           |
+| MAE_MYAIR_INCLUDE_ZERO_SCORES       | Include records with zero scores ("TRUE" or "FALSE")                                                          | FALSE        |
+| MAE_MYAIR_USERNAME_N                | MyAir account username                                                                                        | (required)   |
+| MAE_MYAIR_PASSWORD_N                | MyAir account password                                                                                        | (required)   |
+| MAE_MYAIR_DEVICE_TOKEN_N            | MyAir device token (optional, usually not required)                                                           | (empty)      |
+| MAE_MYAIR_REGION_N                  | MyAir region (e.g., NA, EU)                                                                                   | NA           |
 
 > [!NOTE]
 > `MAE_MYAIR_<PROPERTY>_N` should replace `N` with an integer to indicate 1 or more users to populate data from.

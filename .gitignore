@@ -3,6 +3,7 @@
 __pycache__/**
 *.env
 .env
+!.github/env/*.env
 
 .myair/*
 
