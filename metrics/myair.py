@@ -8,6 +8,7 @@ import traceback
 import aiohttp
 from libs import settings
 from libs.enums.loglevel import LogLevel
+from libs.health_status import HealthStatus
 from libs.logger import Log
 from libs.models.Mask import Mask
 from libs.models.Patient import Patient
@@ -28,6 +29,7 @@ class MyAirMetrics:
         self._module = os.path.basename(__file__)[:-3]
         self._class = self.__class__.__name__
 
+        self.health = HealthStatus()
         self.namespace = "myair"
         self.polling_interval_seconds = config.metrics["pollingInterval"]
         self.config = config
@@ -254,12 +256,14 @@ class MyAirMetrics:
             try:
                 self.log.debug(f"{self._module}.{self._class}.{_method}", "Begin metrics fetch")
                 await self.fetch()
+                self.health.set_healthy(True)
                 self.log.debug(f"{self._module}.{self._class}.{_method}", "End metrics fetch")
                 self.log.debug(
                     f"{self._module}.{self._class}.{_method}", f"Sleeping for {self.polling_interval_seconds} seconds"
                 )
                 await asyncio.sleep(self.polling_interval_seconds)
             except Exception as ex:
+                self.health.set_error(str(ex))
                 self.log.error(f"{self._module}.{self._class}.{_method}", str(ex), traceback.format_exc())
 
     def _create_clientsession(self, **kwargs):

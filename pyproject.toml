@@ -1,0 +1,26 @@
+[project]
+name = "myair-exporter"
+version = "1.0.0"
+description = "MyAir Prometheus Exporter"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "validators~=0.35",
+    "python-dotenv~=1.2",
+    "requests~=2.32",
+    "pytz~=2025",
+    "aiohttp~=3.13",
+    "prometheus_client~=0.24",
+    "pyyaml~=6.0",
+    "pymongo~=4.16",
+    "PyJWT~=2.10"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["health*", "libs*", "metrics*"]
+namespaces = true

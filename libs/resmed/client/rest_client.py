@@ -257,7 +257,7 @@ class RESTClient(MyAirClient):
         if "errors" in resp_dict:
             try:
                 first_error = resp_dict["errors"][0]
-                if "errorInfo" in first_error:
+                if isinstance(first_error, dict) and "errorInfo" in first_error:
                     error_type = first_error["errorInfo"].get("errorType")
                     error_code = first_error["errorInfo"].get("errorCode")
                     error_message: str = f"{error_type}: {error_code}"
@@ -271,11 +271,13 @@ class RESTClient(MyAirClient):
                         "equipmentNotAssigned",
                     }:
                         raise IncompleteAccountError(f"{error_message}")
-                else:
+                elif isinstance(first_error, dict):
                     error_message = first_error.get("message", str(first_error))
+                else:
+                    error_message = str(first_error)
 
-            except (TypeError, KeyError, IndexError):
-                error_message = "Error"
+            except (TypeError, KeyError, IndexError) as ex:
+                error_message = f"Error parsing response: {ex}"
             raise HttpProcessingError(
                 code=response.status,
                 message=f"{step} step: {error_message}. {resp_dict})",

@@ -17,10 +17,9 @@ RUN \
   apk add --no-cache git curl build-base tcl tk && \
   mkdir -p /app /data && \
   pip install --no-cache-dir --upgrade pip && \
-  pip install --no-cache-dir -r /app/setup/requirements.txt && \
+  pip install --no-cache-dir . && \
   sed -i "s/APP_VERSION = \"1.0.0-snapshot\"/APP_VERSION = \"${APP_VERSION}\"/g" "/app/libs/settings.py" && \
-  apk del git build-base && \
-  rm -rf /app/setup
+  apk del git build-base
 
 VOLUME ["/data"]
 VOLUME ["/config"]
@@ -29,6 +28,6 @@ WORKDIR /app
 EXPOSE 8933
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl --fail http://localhost:8933/metrics || exit 1
+  CMD curl --fail http://localhost:8933/health || exit 1
 
 CMD ["python", "-u", "/app/main.py"]

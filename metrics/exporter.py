@@ -2,12 +2,14 @@ import inspect
 import os
 import traceback
 
+from aiohttp import web
 from libs.enums.loglevel import LogLevel
+from libs.health_status import HealthStatus
 from libs.logger import Log
 from libs.settings import Settings
 from metrics.config import MyAirMetricsConfig
 from metrics.myair import MyAirMetrics
-from prometheus_client import start_http_server
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 
 class MetricsExporter:
@@ -23,12 +25,33 @@ class MetricsExporter:
 
         self.log.debug(f"{self._module}.{self._class}.{_method}", "Exporter initialized")
 
+    async def metrics_handler(self, request):
+        resp = web.Response(body=generate_latest())
+        resp.content_type = CONTENT_TYPE_LATEST
+        return resp
+
+    async def health_handler(self, request):
+        health = HealthStatus()
+        if health.healthy:
+            return web.Response(text="OK")
+        else:
+            return web.Response(text="Unhealthy", status=500)
+
     async def run(self):
         _method = inspect.stack()[1][3]
         try:
             config = MyAirMetricsConfig("metrics/config.yml")
             app_metrics = MyAirMetrics(config)
-            start_http_server(config.metrics["port"])
+
+            app = web.Application()
+            app.router.add_get("/metrics", self.metrics_handler)
+            app.router.add_get("/health", self.health_handler)
+
+            runner = web.AppRunner(app)
+            await runner.setup()
+            site = web.TCPSite(runner, "0.0.0.0", config.metrics["port"])
+            await site.start()
+
             self.log.info(
                 f"{self._module}.{self._class}.{_method}",
                 f"Exporter Starting Listen => :{config.metrics['port']}/metrics",
